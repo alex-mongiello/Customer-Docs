@@ -1,0 +1,1280 @@
+```bash
+# ================================
+# Peerbound Customer Proof Video (Remotion)
+# 60s • 1080x1350 • silent • text/graphics only
+# Paste this whole script into your terminal.
+# ================================
+
+set -e
+
+APP="peerbound-customer-proof"
+FPS=30
+DURATION=1800
+
+# 1) Create Remotion project (React + TS)
+npx create-video@latest "$APP" --template react-ts
+cd "$APP"
+
+# 2) Install deps
+npm i
+
+# 3) Create folders
+mkdir -p src/video/scenes/problem
+mkdir -p src/video/scenes/fix
+mkdir -p src/video/scenes/bigger
+
+# 4) Write files
+
+cat > remotion.config.ts <<'EOF'
+import {Config} from 'remotion';
+
+Config.setVideoImageFormat('png');
+EOF
+
+cat > src/Root.tsx <<'EOF'
+import React from 'react';
+import {Composition} from 'remotion';
+import {CustomerProofLinkedIn} from './video/CustomerProofLinkedIn';
+
+export const RemotionRoot: React.FC = () => {
+  return (
+    <>
+      <Composition
+        id="CustomerProofLinkedIn"
+        component={CustomerProofLinkedIn}
+        durationInFrames={1800} // 60s @ 30fps
+        fps={30}
+        width={1080}
+        height={1350}
+      />
+    </>
+  );
+};
+EOF
+
+cat > src/video/brand.ts <<'EOF'
+export const brand = {
+  // Peerbound brand colors (provided)
+  coral: '#fe4759',
+  purple: '#241956',
+  offWhite: '#f8f8fb',
+
+  // Utility tones (derived)
+  ink: '#120B2E',
+  white: '#FFFFFF',
+
+  borderDark: 'rgba(248,248,251,0.12)',
+  borderLight: 'rgba(36,25,86,0.10)',
+
+  textOnDark: 'rgba(248,248,251,0.94)',
+  textMutedOnDark: 'rgba(248,248,251,0.72)',
+
+  textOnLight: 'rgba(36,25,86,0.92)',
+  textMutedOnLight: 'rgba(36,25,86,0.72)',
+};
+EOF
+
+cat > src/video/timing.ts <<'EOF'
+export const FPS = 30;
+
+// 30fps timeline
+export const scenes = {
+  hook: {start: 0, end: 150},       // 0:00–0:05
+  problem: {start: 150, end: 540},  // 0:05–0:18
+  data: {start: 540, end: 960},     // 0:18–0:32
+  fix: {start: 960, end: 1440},     // 0:32–0:48
+  bigger: {start: 1440, end: 1650}, // 0:48–0:55
+  cta: {start: 1650, end: 1800},    // 0:55–1:00
+} as const;
+EOF
+
+cat > src/video/ui.tsx <<'EOF'
+import React from 'react';
+import {interpolate, useCurrentFrame, useVideoConfig, Easing} from 'remotion';
+
+export const FullFrame: React.FC<{bg: string; children: React.ReactNode}> = ({bg, children}) => {
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        background: bg,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif',
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const SafeArea: React.FC<{children: React.ReactNode}> = ({children}) => {
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        padding: 84,
+        boxSizing: 'border-box',
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const Title: React.FC<{
+  children: React.ReactNode;
+  color?: string;
+  size?: number;
+  weight?: number;
+  align?: 'left' | 'center';
+}> = ({children, color = '#fff', size = 86, weight = 900, align = 'center'}) => {
+  return (
+    <div
+      style={{
+        color,
+        fontSize: size,
+        fontWeight: weight,
+        lineHeight: 1.05,
+        letterSpacing: -1.2,
+        textAlign: align,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const Body: React.FC<{
+  children: React.ReactNode;
+  color?: string;
+  size?: number;
+  weight?: number;
+  align?: 'left' | 'center';
+  opacity?: number;
+}> = ({children, color = '#fff', size = 44, weight = 600, align = 'center', opacity = 0.9}) => {
+  return (
+    <div
+      style={{
+        color,
+        fontSize: size,
+        fontWeight: weight,
+        lineHeight: 1.25,
+        textAlign: align,
+        opacity,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const FadeUp: React.FC<{
+  start: number; // local frame
+  duration?: number;
+  children: React.ReactNode;
+  distance?: number;
+}> = ({start, duration = 18, distance = 18, children}) => {
+  const frame = useCurrentFrame();
+  const f = frame - start;
+
+  const opacity = interpolate(f, [0, duration], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: Easing.out(Easing.cubic),
+  });
+
+  const y = interpolate(f, [0, duration], [distance, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: Easing.out(Easing.cubic),
+  });
+
+  return <div style={{opacity, transform: `translateY(${y}px)`}}>{children}</div>;
+};
+
+export const PunchIn: React.FC<{start: number; duration?: number; children: React.ReactNode}> = ({
+  start,
+  duration = 10,
+  children,
+}) => {
+  const frame = useCurrentFrame();
+  const f = frame - start;
+
+  const opacity = interpolate(f, [0, 3], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const scale = interpolate(f, [0, duration], [0.98, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: Easing.out(Easing.cubic),
+  });
+
+  return <div style={{opacity, transform: `scale(${scale})`}}>{children}</div>;
+};
+EOF
+
+cat > src/video/CustomerProofLinkedIn.tsx <<'EOF'
+import React from 'react';
+import {Sequence} from 'remotion';
+import {scenes} from './timing';
+import {Hook} from './scenes/Hook';
+import {Problem} from './scenes/Problem';
+import {DataScene} from './scenes/DataScene';
+import {Fix} from './scenes/Fix';
+import {BiggerPicture} from './scenes/BiggerPicture';
+import {CTA} from './scenes/CTA';
+
+export const CustomerProofLinkedIn: React.FC = () => {
+  return (
+    <>
+      <Sequence from={scenes.hook.start} durationInFrames={scenes.hook.end - scenes.hook.start}>
+        <Hook />
+      </Sequence>
+
+      <Sequence from={scenes.problem.start} durationInFrames={scenes.problem.end - scenes.problem.start}>
+        <Problem />
+      </Sequence>
+
+      <Sequence from={scenes.data.start} durationInFrames={scenes.data.end - scenes.data.start}>
+        <DataScene />
+      </Sequence>
+
+      <Sequence from={scenes.fix.start} durationInFrames={scenes.fix.end - scenes.fix.start}>
+        <Fix />
+      </Sequence>
+
+      <Sequence from={scenes.bigger.start} durationInFrames={scenes.bigger.end - scenes.bigger.start}>
+        <BiggerPicture />
+      </Sequence>
+
+      <Sequence from={scenes.cta.start} durationInFrames={scenes.cta.end - scenes.cta.start}>
+        <CTA />
+      </Sequence>
+    </>
+  );
+};
+EOF
+
+# -------- SCENES --------
+
+cat > src/video/scenes/Hook.tsx <<'EOF'
+import React from 'react';
+import {brand} from '../brand';
+import {FullFrame, SafeArea, Title, Body, PunchIn, FadeUp} from '../ui';
+
+export const Hook: React.FC = () => {
+  return (
+    <FullFrame bg={brand.purple}>
+      <SafeArea>
+        <div style={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 28}}>
+          <PunchIn start={0}>
+            <Title color={brand.offWhite}>
+              Your best reps are <span style={{color: brand.coral}}>losing deals.</span>
+            </Title>
+          </PunchIn>
+
+          <div style={{height: 8}} />
+
+          <FadeUp start={90} duration={18}>
+            <Body size={54} weight={700} color={brand.offWhite} opacity={0.95}>
+              It’s not their fault.
+            </Body>
+          </FadeUp>
+
+          <div style={{opacity: 0.10, marginTop: 40}}>
+            <div style={{height: 2, width: 240, background: brand.coral}} />
+          </div>
+        </div>
+      </SafeArea>
+    </FullFrame>
+  );
+};
+EOF
+
+cat > src/video/scenes/Problem.tsx <<'EOF'
+import React from 'react';
+import {Sequence} from 'remotion';
+import {brand} from '../brand';
+import {FullFrame, SafeArea} from '../ui';
+import {ProblemSlack} from './problem/ProblemSlack';
+import {ProblemDrive} from './problem/ProblemDrive';
+import {ProblemSplit} from './problem/ProblemSplit';
+
+export const Problem: React.FC = () => {
+  return (
+    <FullFrame bg={brand.purple}>
+      <SafeArea>
+        <div style={{width: '100%', height: '100%'}}>
+          <Sequence from={0} durationInFrames={120}>
+            <ProblemSlack />
+          </Sequence>
+
+          <Sequence from={120} durationInFrames={120}>
+            <ProblemDrive />
+          </Sequence>
+
+          <Sequence from={240} durationInFrames={120}>
+            <ProblemSplit />
+          </Sequence>
+        </div>
+      </SafeArea>
+    </FullFrame>
+  );
+};
+EOF
+
+cat > src/video/scenes/problem/ProblemSlack.tsx <<'EOF'
+import React from 'react';
+import {interpolate, useCurrentFrame, Easing} from 'remotion';
+import {brand} from '../../brand';
+import {Body, FadeUp} from '../../ui';
+
+const msg = 'Hey does anyone have a healthcare customer I can reference for a call tomorrow?';
+
+export const ProblemSlack: React.FC = () => {
+  const frame = useCurrentFrame();
+
+  const cardY = interpolate(frame, [0, 18], [18, 0], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+  const cardO = interpolate(frame, [0, 10], [0, 1], {extrapolateRight: 'clamp'});
+
+  const chars = Math.floor(
+    interpolate(frame, [12, 78], [0, msg.length], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})
+  );
+  const typed = msg.slice(0, chars);
+
+  const dotsOn = frame >= 72 && frame <= 96;
+  const dotsFade = interpolate(frame, [72, 80, 92, 96], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+
+  return (
+    <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <div
+        style={{
+          width: 860,
+          borderRadius: 22,
+          background: 'rgba(248,248,251,0.06)',
+          border: `1px solid ${brand.borderDark}`,
+          boxShadow: '0 18px 50px rgba(0,0,0,0.35)',
+          padding: 28,
+          transform: `translateY(${cardY}px)`,
+          opacity: cardO,
+        }}
+      >
+        <div style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18}}>
+          <div style={{width: 14, height: 14, borderRadius: 99, background: brand.coral}} />
+          <div style={{color: brand.textOnDark, fontSize: 26, fontWeight: 900}}>sales-team</div>
+          <div style={{color: brand.textMutedOnDark, fontSize: 22}}>• Slack</div>
+        </div>
+
+        <div style={{display: 'flex', gap: 14}}>
+          <div style={{width: 44, height: 44, borderRadius: 12, background: 'rgba(248,248,251,0.08)'}} />
+          <div style={{flex: 1}}>
+            <div style={{color: brand.textMutedOnDark, fontSize: 22, marginBottom: 10}}>
+              <span style={{fontWeight: 900, color: brand.textOnDark}}>AE</span> <span style={{opacity: 0.7}}>• just now</span>
+            </div>
+
+            <div style={{color: brand.offWhite, fontSize: 32, lineHeight: 1.25, fontWeight: 700}}>
+              {typed}
+              <span style={{opacity: 0.55}}>{chars < msg.length ? '|' : ''}</span>
+            </div>
+
+            <div style={{marginTop: 18, height: 26}}>
+              {dotsOn ? (
+                <div style={{display: 'flex', gap: 8, opacity: dotsFade}}>
+                  <div style={{width: 10, height: 10, borderRadius: 99, background: 'rgba(248,248,251,0.45)'}} />
+                  <div style={{width: 10, height: 10, borderRadius: 99, background: 'rgba(248,248,251,0.45)'}} />
+                  <div style={{width: 10, height: 10, borderRadius: 99, background: 'rgba(248,248,251,0.45)'}} />
+                </div>
+              ) : null}
+            </div>
+
+            <FadeUp start={98} duration={12}>
+              <Body size={30} align="left" color={brand.textMutedOnDark} opacity={0.9}>
+                No reply.
+              </Body>
+            </FadeUp>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+EOF
+
+cat > src/video/scenes/problem/ProblemDrive.tsx <<'EOF'
+import React from 'react';
+import {interpolate, useCurrentFrame, Easing} from 'remotion';
+import {brand} from '../../brand';
+
+export const ProblemDrive: React.FC = () => {
+  const frame = useCurrentFrame();
+
+  const o = interpolate(frame, [0, 10], [0, 1], {extrapolateRight: 'clamp'});
+  const y = interpolate(frame, [0, 16], [18, 0], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+
+  const resultsReveal = interpolate(frame, [18, 36], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const stampIn = interpolate(frame, [70, 80], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+
+  return (
+    <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <div
+        style={{
+          width: 900,
+          borderRadius: 22,
+          background: 'rgba(248,248,251,0.06)',
+          border: `1px solid ${brand.borderDark}`,
+          boxShadow: '0 18px 50px rgba(0,0,0,0.35)',
+          padding: 26,
+          opacity: o,
+          transform: `translateY(${y}px)`,
+        }}
+      >
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18}}>
+          <div style={{color: brand.textOnDark, fontSize: 24, fontWeight: 900}}>Drive Search</div>
+          <div style={{color: brand.textMutedOnDark, fontSize: 20}}>Internal docs</div>
+        </div>
+
+        <div
+          style={{
+            background: 'rgba(248,248,251,0.08)',
+            border: `1px solid ${brand.borderDark}`,
+            borderRadius: 14,
+            padding: '14px 16px',
+            color: brand.offWhite,
+            fontSize: 28,
+            fontWeight: 800,
+            display: 'flex',
+            gap: 12,
+            alignItems: 'center',
+          }}
+        >
+          <div style={{width: 18, height: 18, borderRadius: 99, border: '2px solid rgba(248,248,251,0.7)'}} />
+          customer case study healthcare
+        </div>
+
+        <div style={{marginTop: 18, opacity: resultsReveal}}>
+          {['CaseStudy_Healthcare_FINAL_v3.pptx', 'healthcare_customer_story_draft.docx', 'HC_case_study_old.pdf', 'NEW_case_study_maybe.pptx'].map(
+            (name, i) => (
+              <div
+                key={name}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  padding: '14px 6px',
+                  borderBottom: i === 3 ? 'none' : '1px solid rgba(248,248,251,0.06)',
+                  color: brand.offWhite,
+                  fontSize: 24,
+                }}
+              >
+                <div style={{opacity: 0.92}}>{name}</div>
+                <div style={{opacity: 0.6}}>{i === 2 ? '2022' : '—'}</div>
+              </div>
+            )
+          )}
+        </div>
+
+        <div style={{position: 'relative', height: 0}}>
+          <div
+            style={{
+              position: 'absolute',
+              right: 40,
+              top: -170,
+              transform: `rotate(-12deg) scale(${stampIn})`,
+              transformOrigin: 'center',
+              opacity: stampIn,
+              background: brand.coral,
+              color: brand.offWhite,
+              padding: '16px 22px',
+              borderRadius: 14,
+              fontSize: 34,
+              fontWeight: 950,
+              letterSpacing: 1.2,
+              boxShadow: '0 18px 40px rgba(0,0,0,0.35)',
+            }}
+          >
+            OUTDATED
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+EOF
+
+cat > src/video/scenes/problem/ProblemSplit.tsx <<'EOF'
+import React from 'react';
+import {interpolate, useCurrentFrame, Easing} from 'remotion';
+import {brand} from '../../brand';
+
+const StatBox: React.FC<{
+  label: string;
+  value: string;
+  accentBg: string;
+  delay: number;
+}> = ({label, value, accentBg, delay}) => {
+  const frame = useCurrentFrame();
+  const o = interpolate(frame - delay, [0, 10], [0, 1], {extrapolateRight: 'clamp'});
+  const y = interpolate(frame - delay, [0, 14], [14, 0], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+
+  return (
+    <div
+      style={{
+        flex: 1,
+        background: 'rgba(248,248,251,0.06)',
+        border: `1px solid ${brand.borderDark}`,
+        borderRadius: 20,
+        padding: 24,
+        opacity: o,
+        transform: `translateY(${y}px)`,
+      }}
+    >
+      <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
+        <div
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 14,
+            background: accentBg,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div style={{width: 16, height: 16, borderRadius: 99, border: '2px solid rgba(248,248,251,0.95)'}} />
+        </div>
+        <div style={{color: brand.textOnDark, fontSize: 22, fontWeight: 900}}>{label}</div>
+      </div>
+      <div style={{marginTop: 18, color: brand.offWhite, fontSize: 72, fontWeight: 950, letterSpacing: -1.2}}>{value}</div>
+      <div style={{marginTop: 6, color: brand.textMutedOnDark, fontSize: 24, fontWeight: 700}}>to find proof</div>
+    </div>
+  );
+};
+
+export const ProblemSplit: React.FC = () => {
+  const frame = useCurrentFrame();
+
+  const captionO = interpolate(frame, [70, 86], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const captionY = interpolate(frame, [70, 86], [10, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+
+  return (
+    <div style={{width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 22}}>
+      <div style={{display: 'flex', gap: 16}}>
+        <StatBox label="Your rep" value="45 min" accentBg="rgba(248,248,251,0.14)" delay={0} />
+        <StatBox label="Their competitor" value="2 min" accentBg={brand.coral} delay={10} />
+      </div>
+
+      <div style={{opacity: captionO, transform: `translateY(${captionY}px)`, textAlign: 'center'}}>
+        <div style={{color: brand.offWhite, fontSize: 44, fontWeight: 950}}>
+          Guess who <span style={{color: brand.coral}}>wins</span> the deal.
+        </div>
+      </div>
+    </div>
+  );
+};
+EOF
+
+cat > src/video/scenes/DataScene.tsx <<'EOF'
+import React from 'react';
+import {interpolate, useCurrentFrame, Easing} from 'remotion';
+import {brand} from '../brand';
+import {FullFrame, SafeArea} from '../ui';
+
+const rows = [
+  {pct: 28.3, label: 'Show me someone in this industry', top: true},
+  {pct: 23.3, label: 'Give me a case study', top: true},
+  {pct: 15.0, label: 'Show me a similar customer', top: true},
+  {pct: 13.6, label: 'I need a quote for my deck'},
+  {pct: 9.6, label: 'How do customers use this feature?'},
+  {pct: 6.0, label: 'How do we compare to competitors?'},
+];
+
+export const DataScene: React.FC = () => {
+  const frame = useCurrentFrame();
+
+  const headerO = interpolate(frame, [0, 12], [0, 1], {extrapolateRight: 'clamp'});
+  const headerY = interpolate(frame, [0, 16], [12, 0], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+
+  const chartStart = 60; // ~0:20 inside this scene
+  const barStagger = 14;
+
+  const revealStart = 330; // ~0:29
+  const revealO = interpolate(frame, [revealStart, revealStart + 14], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const revealS = interpolate(frame, [revealStart, revealStart + 14], [0.98, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: Easing.out(Easing.cubic),
+  });
+
+  const lastLineO = interpolate(frame, [390, 405], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+
+  return (
+    <FullFrame bg={brand.ink}>
+      <SafeArea>
+        <div style={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 26}}>
+          <div style={{opacity: headerO, transform: `translateY(${headerY}px)`}}>
+            <div style={{color: brand.offWhite, fontSize: 46, fontWeight: 950, letterSpacing: -0.5, lineHeight: 1.15}}>
+              We analyzed <span style={{color: brand.coral}}>6,500+</span> real sales rep questions about customer proof.
+            </div>
+          </div>
+
+          <div
+            style={{
+              marginTop: 10,
+              background: 'rgba(248,248,251,0.05)',
+              border: `1px solid ${brand.borderDark}`,
+              borderRadius: 24,
+              padding: 26,
+            }}
+          >
+            <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
+              {rows.map((r, i) => {
+                const start = chartStart + i * barStagger;
+                const t = frame - start;
+
+                const barO = interpolate(t, [0, 6], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+                const w = interpolate(t, [0, 22], [0, r.pct], {
+                  extrapolateLeft: 'clamp',
+                  extrapolateRight: 'clamp',
+                  easing: Easing.out(Easing.cubic),
+                });
+
+                const count = interpolate(t, [0, 22], [0, r.pct], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+                const shown = (Math.round(count * 10) / 10).toFixed(1);
+
+                return (
+                  <div key={r.label} style={{display: 'flex', alignItems: 'center', gap: 14, opacity: barO}}>
+                    <div style={{width: 92, color: brand.offWhite, fontSize: 24, fontWeight: 950}}>
+                      {shown}%
+                    </div>
+
+                    <div style={{flex: 1}}>
+                      <div
+                        style={{
+                          height: 20,
+                          borderRadius: 999,
+                          background: 'rgba(248,248,251,0.10)',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <div
+                          style={{
+                            height: '100%',
+                            width: `${w}%`,
+                            borderRadius: 999,
+                            background: r.top ? 'rgba(254,71,89,0.78)' : brand.coral,
+                          }}
+                        />
+                      </div>
+
+                      <div style={{marginTop: 8, color: brand.offWhite, fontSize: 26, fontWeight: 750}}>
+                        {r.label}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Group highlight for top 3 */}
+            <div style={{position: 'relative', marginTop: 18}}>
+              <div
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  top: -280, // tuned for 6-row layout
+                  height: 200,
+                  borderRadius: 20,
+                  border: `2px solid rgba(254,71,89,${revealO})`,
+                  opacity: revealO,
+                }}
+              />
+            </div>
+
+            {/* 66.6% reveal */}
+            <div style={{marginTop: 18, display: 'flex', alignItems: 'baseline', gap: 18}}>
+              <div style={{transform: `scale(${revealS})`, opacity: revealO}}>
+                <div style={{color: brand.offWhite, fontSize: 112, fontWeight: 950, letterSpacing: -2}}>
+                  66.6<span style={{fontSize: 64, opacity: 0.92}}>%</span>
+                </div>
+              </div>
+              <div style={{opacity: revealO}}>
+                <div style={{color: brand.textOnDark, fontSize: 34, fontWeight: 850}}>
+                  = “Show me someone like my prospect”
+                </div>
+              </div>
+            </div>
+
+            <div style={{marginTop: 10, opacity: lastLineO}}>
+              <div style={{color: brand.offWhite, fontSize: 38, fontWeight: 950}}>
+                That’s not a content problem. <span style={{color: brand.coral}}>That’s an access problem.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </SafeArea>
+    </FullFrame>
+  );
+};
+EOF
+
+cat > src/video/scenes/Fix.tsx <<'EOF'
+import React from 'react';
+import {Sequence} from 'remotion';
+import {brand} from '../brand';
+import {FullFrame, SafeArea} from '../ui';
+import {FixCard1, FixCard2, FixCard3, FixCard4, FixHeader} from './fix/FixCards';
+
+export const Fix: React.FC = () => {
+  return (
+    <FullFrame bg={brand.offWhite}>
+      <SafeArea>
+        <div style={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 22}}>
+          <Sequence from={0} durationInFrames={30}>
+            <FixHeader />
+          </Sequence>
+
+          <Sequence from={30} durationInFrames={120}>
+            <FixCard1 />
+          </Sequence>
+
+          <Sequence from={150} durationInFrames={120}>
+            <FixCard2 />
+          </Sequence>
+
+          <Sequence from={270} durationInFrames={120}>
+            <FixCard3 />
+          </Sequence>
+
+          <Sequence from={390} durationInFrames={90}>
+            <FixCard4 />
+          </Sequence>
+        </div>
+      </SafeArea>
+    </FullFrame>
+  );
+};
+EOF
+
+cat > src/video/scenes/fix/FixCards.tsx <<'EOF'
+import React from 'react';
+import {interpolate, useCurrentFrame, Easing} from 'remotion';
+import {brand} from '../../brand';
+
+const CardShell: React.FC<{children: React.ReactNode}> = ({children}) => {
+  const frame = useCurrentFrame();
+  const o = interpolate(frame, [0, 10], [0, 1], {extrapolateRight: 'clamp'});
+  const y = interpolate(frame, [0, 16], [16, 0], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+
+  return (
+    <div
+      style={{
+        background: brand.white,
+        borderRadius: 26,
+        border: `1px solid ${brand.borderLight}`,
+        boxShadow: '0 18px 50px rgba(36,25,86,0.10)',
+        padding: 28,
+        opacity: o,
+        transform: `translateY(${y}px)`,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const FixHeader: React.FC = () => {
+  const frame = useCurrentFrame();
+  const o = interpolate(frame, [0, 10], [0, 1], {extrapolateRight: 'clamp'});
+  const y = interpolate(frame, [0, 14], [10, 0], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+
+  return (
+    <div style={{opacity: o, transform: `translateY(${y}px)`}}>
+      <div style={{color: brand.purple, fontSize: 54, fontWeight: 950, letterSpacing: -1}}>
+        How the best teams <span style={{color: brand.coral}}>fix</span> this
+      </div>
+    </div>
+  );
+};
+
+const Icon: React.FC<{text: string}> = ({text}) => (
+  <div
+    style={{
+      width: 56,
+      height: 56,
+      borderRadius: 18,
+      background: 'rgba(254,71,89,0.12)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 28,
+    }}
+  >
+    {text}
+  </div>
+);
+
+export const FixCard1: React.FC = () => (
+  <CardShell>
+    <div style={{display: 'flex', gap: 16, alignItems: 'flex-start'}}>
+      <Icon text="🏷️" />
+      <div>
+        <div style={{color: brand.purple, fontSize: 46, fontWeight: 950, letterSpacing: -0.8}}>Tag everything</div>
+        <div style={{marginTop: 10, color: brand.textMutedOnLight, fontSize: 32, fontWeight: 750, lineHeight: 1.2}}>
+          Industry · Company size · Use case · Geography
+        </div>
+      </div>
+    </div>
+  </CardShell>
+);
+
+export const FixCard2: React.FC = () => (
+  <CardShell>
+    <div style={{display: 'flex', gap: 16, alignItems: 'flex-start'}}>
+      <Icon text="🔍" />
+      <div>
+        <div style={{color: brand.purple, fontSize: 46, fontWeight: 950, letterSpacing: -0.8}}>Make it searchable</div>
+        <div style={{marginTop: 10, color: brand.textMutedOnLight, fontSize: 32, fontWeight: 750, lineHeight: 1.2}}>
+          Slack · CRM · Not buried in folders
+        </div>
+      </div>
+    </div>
+  </CardShell>
+);
+
+export const FixCard3: React.FC = () => {
+  const frame = useCurrentFrame();
+
+  const splitStart = 36;
+  const splitT = frame - splitStart;
+
+  const piecesO = interpolate(splitT, [0, 10], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const spread = interpolate(splitT, [0, 22], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: Easing.out(Easing.cubic),
+  });
+
+  const piece = (label: string, dx: number, dy: number) => (
+    <div
+      style={{
+        width: 170,
+        height: 76,
+        borderRadius: 16,
+        border: `1px solid ${brand.borderLight}`,
+        background: brand.white,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 22,
+        fontWeight: 900,
+        color: brand.purple,
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
+        transform: `translate(calc(-50% + ${dx * spread}px), calc(-50% + ${dy * spread}px))`,
+        opacity: piecesO,
+        boxShadow: '0 12px 30px rgba(36,25,86,0.08)',
+      }}
+    >
+      {label}
+    </div>
+  );
+
+  return (
+    <CardShell>
+      <div style={{display: 'flex', gap: 16, alignItems: 'flex-start'}}>
+        <Icon text="✂️" />
+        <div style={{flex: 1}}>
+          <div style={{color: brand.purple, fontSize: 46, fontWeight: 950, letterSpacing: -0.8}}>
+            1 case study → <span style={{color: brand.coral}}>5 assets</span>
+          </div>
+
+          <div style={{marginTop: 18, position: 'relative', height: 220}}>
+            <div
+              style={{
+                width: 260,
+                height: 140,
+                borderRadius: 22,
+                background: 'rgba(254,71,89,0.10)',
+                border: '1px solid rgba(254,71,89,0.24)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 26,
+                fontWeight: 950,
+                color: brand.purple,
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                boxShadow: '0 14px 40px rgba(36,25,86,0.08)',
+              }}
+            >
+              Case Study
+            </div>
+
+            {piece('Quote card', -300, -80)}
+            {piece('Stat callout', 290, -80)}
+            {piece('Slide', -320, 90)}
+            {piece('Video clip', 0, 125)}
+            {piece('One-liner', 320, 90)}
+          </div>
+        </div>
+      </div>
+    </CardShell>
+  );
+};
+
+export const FixCard4: React.FC = () => {
+  const frame = useCurrentFrame();
+
+  const swapStart = 36;
+  const t = frame - swapStart;
+
+  const oldO = interpolate(t, [0, 12, 22], [1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const newO = interpolate(t, [14, 26], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const newY = interpolate(t, [14, 26], [16, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+
+  return (
+    <CardShell>
+      <div style={{display: 'flex', gap: 16, alignItems: 'flex-start'}}>
+        <Icon text="🔄" />
+        <div style={{flex: 1}}>
+          <div style={{color: brand.purple, fontSize: 46, fontWeight: 950, letterSpacing: -0.8}}>Refresh every 12 months</div>
+
+          <div style={{marginTop: 16, position: 'relative', height: 140}}>
+            <div
+              style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                margin: '0 auto',
+                width: 520,
+                height: 120,
+                borderRadius: 22,
+                background: 'rgba(36,25,86,0.05)',
+                border: `1px solid ${brand.borderLight}`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 28,
+                fontWeight: 900,
+                color: brand.purple,
+                opacity: oldO,
+              }}
+            >
+              Case Study (old)
+              <div style={{marginLeft: 18, color: brand.coral, fontWeight: 950}}>✕</div>
+            </div>
+
+            <div
+              style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                margin: '0 auto',
+                width: 520,
+                height: 120,
+                borderRadius: 22,
+                background: 'rgba(254,71,89,0.10)',
+                border: '1px solid rgba(254,71,89,0.24)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 28,
+                fontWeight: 950,
+                color: brand.purple,
+                opacity: newO,
+                transform: `translateY(${newY}px)`,
+              }}
+            >
+              Case Study (updated)
+            </div>
+          </div>
+        </div>
+      </div>
+    </CardShell>
+  );
+};
+EOF
+
+cat > src/video/scenes/BiggerPicture.tsx <<'EOF'
+import React from 'react';
+import {Sequence} from 'remotion';
+import {brand} from '../brand';
+import {FullFrame, SafeArea} from '../ui';
+import {FrameCalls, FrameReviews, FrameClips} from './bigger/Frames';
+
+export const BiggerPicture: React.FC = () => {
+  return (
+    <FullFrame bg={brand.purple}>
+      <SafeArea>
+        <Sequence from={0} durationInFrames={70}>
+          <FrameCalls />
+        </Sequence>
+        <Sequence from={70} durationInFrames={80}>
+          <FrameReviews />
+        </Sequence>
+        <Sequence from={150} durationInFrames={60}>
+          <FrameClips />
+        </Sequence>
+      </SafeArea>
+    </FullFrame>
+  );
+};
+EOF
+
+cat > src/video/scenes/bigger/Frames.tsx <<'EOF'
+import React from 'react';
+import {interpolate, useCurrentFrame, Easing} from 'remotion';
+import {brand} from '../../brand';
+
+const FrameShell: React.FC<{title: string; children: React.ReactNode}> = ({title, children}) => {
+  const frame = useCurrentFrame();
+  const o = interpolate(frame, [0, 10], [0, 1], {extrapolateRight: 'clamp'});
+  const y = interpolate(frame, [0, 14], [12, 0], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+
+  return (
+    <div style={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 22, opacity: o, transform: `translateY(${y}px)`}}>
+      <div style={{color: brand.offWhite, fontSize: 54, fontWeight: 950, letterSpacing: -1}}>{title}</div>
+      {children}
+    </div>
+  );
+};
+
+export const FrameCalls: React.FC = () => {
+  const frame = useCurrentFrame();
+  const wave = (i: number) => 20 + 30 * Math.abs(Math.sin(frame / 10 + i * 0.6));
+
+  return (
+    <FrameShell title="Proof lives in your calls">
+      <div style={{display: 'flex', gap: 10, alignItems: 'flex-end', height: 160}}>
+        {new Array(28).fill(0).map((_, i) => (
+          <div
+            key={i}
+            style={{
+              width: 18,
+              height: wave(i),
+              borderRadius: 10,
+              background: 'rgba(254,71,89,0.90)',
+              opacity: 0.85,
+            }}
+          />
+        ))}
+      </div>
+
+      <div
+        style={{
+          width: 760,
+          marginTop: 8,
+          background: 'rgba(248,248,251,0.08)',
+          border: `1px solid ${brand.borderDark}`,
+          borderRadius: 20,
+          padding: 20,
+          color: brand.offWhite,
+          fontSize: 30,
+          fontWeight: 800,
+        }}
+      >
+        “They picked you because implementation felt easy.”
+      </div>
+    </FrameShell>
+  );
+};
+
+export const FrameReviews: React.FC = () => {
+  const frame = useCurrentFrame();
+  const t = interpolate(frame, [18, 48], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+  const reviewX = interpolate(t, [0, 1], [0, -80]);
+  const aiO = interpolate(t, [0.25, 1], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+
+  return (
+    <FrameShell title="Reviews now power AI search">
+      <div style={{display: 'flex', gap: 18, alignItems: 'center'}}>
+        <div
+          style={{
+            width: 520,
+            borderRadius: 24,
+            background: 'rgba(248,248,251,0.08)',
+            border: `1px solid ${brand.borderDark}`,
+            padding: 22,
+            transform: `translateX(${reviewX}px)`,
+          }}
+        >
+          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+            <div style={{color: brand.offWhite, fontSize: 26, fontWeight: 950}}>G2 Review</div>
+            <div style={{color: brand.offWhite, fontSize: 24, fontWeight: 900}}>★★★★★</div>
+          </div>
+          <div style={{marginTop: 10, color: brand.offWhite, fontSize: 28, fontWeight: 750, lineHeight: 1.2}}>
+            “Best reporting we’ve used in years.”
+          </div>
+          <div style={{marginTop: 10, color: brand.textMutedOnDark, fontSize: 22, fontWeight: 700}}>
+            Mid-market SaaS • Ops
+          </div>
+        </div>
+
+        <div
+          style={{
+            width: 520,
+            borderRadius: 24,
+            background: 'rgba(248,248,251,0.06)',
+            border: `1px solid ${brand.borderDark}`,
+            padding: 22,
+            opacity: aiO,
+          }}
+        >
+          <div style={{color: brand.textMutedOnDark, fontSize: 22, fontWeight: 850}}>AI search result</div>
+          <div style={{marginTop: 10, color: brand.offWhite, fontSize: 30, fontWeight: 950}}>
+            “Best reporting…” <span style={{color: brand.coral}}>— cited in reviews</span>
+          </div>
+          <div style={{marginTop: 10, color: brand.textMutedOnDark, fontSize: 22, fontWeight: 750}}>
+            Sources: calls • reviews • case studies
+          </div>
+        </div>
+      </div>
+    </FrameShell>
+  );
+};
+
+export const FrameClips: React.FC = () => (
+  <FrameShell title="30-second clips > 30-page decks">
+    <div
+      style={{
+        width: 900,
+        height: 420,
+        borderRadius: 28,
+        background: 'rgba(248,248,251,0.06)',
+        border: `1px solid ${brand.borderDark}`,
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      <div style={{position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(254,71,89,0.22), rgba(248,248,251,0.00))'}} />
+
+      <div style={{position: 'absolute', left: 34, top: 26, color: brand.offWhite, fontSize: 26, fontWeight: 950, opacity: 0.9}}>
+        Customer clip
+      </div>
+
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 120,
+          height: 120,
+          borderRadius: 999,
+          background: 'rgba(248,248,251,0.18)',
+          border: `1px solid ${brand.borderDark}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div style={{width: 0, height: 0, borderTop: '18px solid transparent', borderBottom: '18px solid transparent', borderLeft: '28px solid #fff', marginLeft: 8}} />
+      </div>
+
+      <div
+        style={{
+          position: 'absolute',
+          right: 26,
+          bottom: 22,
+          background: 'rgba(0,0,0,0.45)',
+          color: brand.offWhite,
+          borderRadius: 12,
+          padding: '10px 14px',
+          fontSize: 24,
+          fontWeight: 950,
+        }}
+      >
+        0:30
+      </div>
+    </div>
+  </FrameShell>
+);
+EOF
+
+cat > src/video/scenes/CTA.tsx <<'EOF'
+import React from 'react';
+import {interpolate, useCurrentFrame, Easing, staticFile} from 'remotion';
+import {brand} from '../brand';
+import {FullFrame, SafeArea} from '../ui';
+
+export const CTA: React.FC = () => {
+  const frame = useCurrentFrame();
+
+  const logoO = interpolate(frame, [0, 10], [0, 1], {extrapolateRight: 'clamp'});
+  const logoS = interpolate(frame, [0, 16], [0.98, 1], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+
+  const line1O = interpolate(frame, [20, 32], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const line2O = interpolate(frame, [50, 62], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const tagO = interpolate(frame, [80, 92], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+
+  return (
+    <FullFrame bg={brand.offWhite}>
+      <SafeArea>
+        <div
+          style={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+            gap: 26,
+          }}
+        >
+          <div style={{opacity: logoO, transform: `scale(${logoS})`}}>
+            <img
+              src={staticFile('peerbound-logo-dark.svg')}
+              alt="Peerbound"
+              style={{height: 78, width: 'auto', display: 'block'}}
+            />
+          </div>
+
+          <div style={{opacity: line1O, color: brand.purple, fontSize: 52, fontWeight: 950, letterSpacing: -1}}>
+            The full customer proof playbook ↓
+          </div>
+
+          <div style={{opacity: line2O, color: brand.textMutedOnLight, fontSize: 36, fontWeight: 800}}>
+            Link in comments
+          </div>
+
+          <div
+            style={{
+              opacity: tagO,
+              marginTop: 10,
+              maxWidth: 900,
+              color: brand.purple,
+              fontSize: 34,
+              fontWeight: 950,
+              lineHeight: 1.2,
+            }}
+          >
+            Stop letting good deals die because your proof is <span style={{color: brand.coral}}>buried.</span>
+          </div>
+        </div>
+      </SafeArea>
+    </FullFrame>
+  );
+};
+EOF
+
+# --------- Note: Only CTA uses logo (per spec). ---------
+
+# 5) Make sure the composition exports cleanly
+echo ""
+echo "✅ Project created: $APP"
+echo ""
+echo "NEXT: copy your SVG logos into public/ with these exact names:"
+echo "  public/peerbound-logo-dark.svg"
+echo "  public/peerbound-logo-light.svg"
+echo ""
+echo "Then run:"
+echo "  npm start"
+echo ""
+echo "Render (silent mp4):"
+echo "  npm run render -- CustomerProofLinkedIn"
+```
