@@ -150,31 +150,19 @@
     mix-blend-mode: screen;
   }
 
-  /* ── LIGHT SWEEP ── */
-  .light-sweep {
+  /* ── WARM BLOOM TRANSITION ── */
+  .warm-bloom {
     position: absolute;
     inset: 0;
     z-index: 8;
     pointer-events: none;
     opacity: 0;
-    overflow: hidden;
-  }
-  .light-sweep-inner {
-    position: absolute;
-    width: 300px;
-    height: 2200px;
-    top: -140px;
-    background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(255,255,255,0.02) 20%,
-      rgba(255,255,255,0.05) 45%,
-      rgba(255,255,255,0.06) 50%,
-      rgba(255,255,255,0.05) 55%,
-      rgba(255,255,255,0.02) 80%,
-      transparent 100%
+    background: radial-gradient(ellipse 60% 50% at 50% 50%,
+      rgba(254, 160, 120, 0.18) 0%,
+      rgba(254, 71, 89, 0.08) 35%,
+      transparent 70%
     );
-    filter: blur(8px);
-    transform: translateX(-400px) skewX(-6deg);
+    transition: opacity 0.6s ease;
   }
 
   /* ── SCENE CONTAINERS ── */
@@ -198,17 +186,16 @@
   /* ── TEXT REVEAL MASKS ── */
   .reveal-mask {
     overflow: hidden;
-    line-height: 1.2;
+    line-height: 1.35;
     text-align: center;
     width: 100%;
-    padding-bottom: 0.08em;
   }
 
   .reveal-mask .inner {
-    display: block;
-    transform: translateY(115%);
+    display: inline-block;
+    transform: translateY(120%);
     will-change: transform;
-    padding-bottom: 0.05em;
+    padding: 0 0.05em 0.18em 0.05em;
   }
 
   /* ── SCENE 1 TYPOGRAPHY ── */
@@ -273,13 +260,13 @@
 
   .s2-word {
     font-weight: 800;
-    line-height: 1.05;
+    line-height: 1.25;
     letter-spacing: -0.05em;
     opacity: 0;
     transform: scale(2.5) translateY(10px);
     will-change: transform, opacity;
     filter: blur(8px);
-    padding-bottom: 0.05em;
+    padding-bottom: 0.2em;
   }
 
   .s2-just {
@@ -293,6 +280,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    padding-bottom: 0.25em;
   }
 
   .s2-period {
@@ -473,11 +461,6 @@
     50%      { text-shadow: 0 0 45px rgba(237,237,239,0.2), 0 0 90px rgba(237,237,239,0.08); }
   }
 
-  @keyframes sweep {
-    0% { transform: translateX(-400px) skewX(-6deg); }
-    100% { transform: translateX(1480px) skewX(-6deg); }
-  }
-
   @keyframes accent-bar-glow {
     0%, 100% { box-shadow: 0 0 20px var(--coral-glow), 0 0 50px rgba(254,71,89,0.06); }
     50%      { box-shadow: 0 0 35px rgba(254,71,89,0.35), 0 0 80px rgba(254,71,89,0.12); }
@@ -500,9 +483,9 @@
 <canvas id="particleCanvas" width="1080" height="1920"></canvas>
 <canvas id="bloomCanvas" width="1080" height="1920"></canvas>
 
-<!-- Light sweeps -->
-<div class="light-sweep" id="lightSweep1"><div class="light-sweep-inner"></div></div>
-<div class="light-sweep" id="lightSweep2"><div class="light-sweep-inner"></div></div>
+<!-- Warm bloom transitions -->
+<div class="warm-bloom" id="warmBloom1"></div>
+<div class="warm-bloom" id="warmBloom2"></div>
 
 <!-- Waveform glow line -->
 <div class="waveform-glow" id="waveformGlow"></div>
@@ -611,13 +594,10 @@
     brandAccent.style.width = '180px';
   });
 
-  // Light sweep transition out
-  const ls1 = document.getElementById('lightSweep1');
-  at(3.0, () => {
-    ls1.style.opacity = '1';
-    ls1.querySelector('.light-sweep-inner').style.animation = 'sweep 0.85s ease-in-out forwards';
-  });
-  at(3.85, () => { ls1.style.opacity = '0'; });
+  // Warm bloom transition out of Scene 1
+  const bloom1 = document.getElementById('warmBloom1');
+  at(2.9, () => { bloom1.style.opacity = '1'; });
+  at(3.7, () => { bloom1.style.opacity = '0'; });
 
   // Scene 1 cinematic exit — scale up + blur + fade
   at(3.2, () => {
@@ -687,13 +667,10 @@
     scene2.style.filter = 'blur(5px)';
   });
 
-  // Light sweep into Scene 3
-  const ls2 = document.getElementById('lightSweep2');
-  at(5.85, () => {
-    ls2.style.opacity = '1';
-    ls2.querySelector('.light-sweep-inner').style.animation = 'sweep 0.9s ease-in-out forwards';
-  });
-  at(6.75, () => { ls2.style.opacity = '0'; });
+  // Warm bloom into Scene 3
+  const bloom2 = document.getElementById('warmBloom2');
+  at(5.7, () => { bloom2.style.opacity = '1'; });
+  at(6.5, () => { bloom2.style.opacity = '0'; });
 
   // ════════════════════════════════════════
   // SCENE 3
