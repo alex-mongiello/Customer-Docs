@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080, height=1920">
+<title>Peerbound Intro</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+    background: #0d0224;
+    position: relative;
+  }
+
+  /* Background gradient */
+  .bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(170deg, #160340 0%, #0d0224 40%, #2a0a52 100%);
+    z-index: 0;
+  }
+
+  /* Warm radial glow */
+  .bg-glow {
+    position: absolute;
+    width: 900px;
+    height: 900px;
+    bottom: 200px;
+    right: -150px;
+    background: radial-gradient(circle, rgba(254,71,89,0.1) 0%, transparent 70%);
+    z-index: 0;
+    animation: glowDrift 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes glowDrift {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-60px, -40px); }
+  }
+
+  /* Film grain */
+  .grain {
+    position: absolute;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+    animation: grainShift 0.3s steps(3) infinite;
+  }
+
+  @keyframes grainShift {
+    0% { transform: translate(0, 0); }
+    33% { transform: translate(-10px, 15px); }
+    66% { transform: translate(5px, -10px); }
+    100% { transform: translate(0, 0); }
+  }
+
+  /* Canvas for particles + waveform */
+  #particleCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1080px;
+    height: 1920px;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  /* Scene containers */
+  .scene-1, .scene-2, .scene-3 {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 90px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .scene-1 {
+    z-index: 10;
+    padding-bottom: 200px;
+  }
+
+  .scene-2 {
+    z-index: 30;
+  }
+
+  .scene-3 {
+    z-index: 40;
+    padding-bottom: 160px;
+  }
+
+  /* Slide-up mask wrappers */
+  .s1, .s3 {
+    overflow: hidden;
+    line-height: 1;
+    text-align: center;
+    width: 100%;
+  }
+
+  .s1 .t, .s3 .t {
+    display: block;
+    transform: translateY(105%);
+    will-change: transform;
+  }
+
+  /* Scene 1 typography */
+  .s1-we-asked .t {
+    font-size: 88px;
+    font-weight: 800;
+    color: rgba(248,248,251,0.4);
+    letter-spacing: -0.04em;
+  }
+
+  .s1-our .t {
+    font-size: 88px;
+    font-weight: 800;
+    color: rgba(248,248,251,0.4);
+    letter-spacing: -0.04em;
+  }
+
+  .s1-customers .t {
+    font-size: 156px;
+    font-weight: 900;
+    color: #fe4759;
+    letter-spacing: -0.05em;
+  }
+
+  .s1-about .t {
+    font-size: 72px;
+    font-weight: 600;
+    color: rgba(248,248,251,0.15);
+    letter-spacing: -0.04em;
+  }
+
+  .s1-peerbound .t {
+    font-size: 138px;
+    font-weight: 900;
+    color: #f8f8fb;
+    letter-spacing: -0.045em;
+  }
+
+  /* Coral underline */
+  .brand-line {
+    width: 0;
+    height: 10px;
+    background: #fe4759;
+    border-radius: 5px;
+    margin-top: 12px;
+    box-shadow: 0 0 20px rgba(254,71,89,0.4);
+    will-change: width;
+  }
+
+  /* Flash overlay */
+  .flash-overlay {
+    position: absolute;
+    inset: 0;
+    background: #fe4759;
+    z-index: 29;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Scene 2 shake wrapper */
+  .scene-2-anchor {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    pointer-events: none;
+  }
+
+  .scene-2 {
+    text-align: center;
+  }
+
+  .s2-just, .s2-kidding {
+    font-size: 232px;
+    font-weight: 900;
+    line-height: 0.82;
+    letter-spacing: -0.06em;
+    opacity: 0;
+    transform: scale(3);
+    will-change: transform, opacity;
+  }
+
+  .s2-just {
+    color: #f8f8fb;
+  }
+
+  .s2-kidding {
+    color: #fe4759;
+  }
+
+  .s2-period {
+    color: #f8f8fb;
+    opacity: 0;
+    display: inline-block;
+    transform: scale(4) translateY(-20px);
+    will-change: transform, opacity;
+  }
+
+  /* Scene 3 typography */
+  .s3-they-were .t {
+    font-size: 88px;
+    font-weight: 800;
+    color: rgba(248,248,251,0.4);
+    letter-spacing: -0.04em;
+  }
+
+  .s3-already .t {
+    font-size: 168px;
+    font-weight: 900;
+    color: #fe4759;
+    letter-spacing: -0.055em;
+    text-shadow: 0 0 60px rgba(254,71,89,0.25);
+  }
+
+  .s3-talking .t {
+    font-size: 168px;
+    font-weight: 900;
+    color: #f8f8fb;
+    letter-spacing: -0.055em;
+  }
+
+  .s3-about-it .t {
+    font-size: 88px;
+    font-weight: 800;
+    color: rgba(248,248,251,0.4);
+    letter-spacing: -0.04em;
+  }
+
+  /* Scene 3 left accent bar */
+  .s3-bar {
+    position: absolute;
+    left: 58px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 0;
+    background: #fe4759;
+    border-radius: 4px;
+    box-shadow: 0 0 30px rgba(254,71,89,0.25);
+    will-change: height;
+  }
+
+  /* Outro fade to black */
+  .outro {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    z-index: 60;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @keyframes shakeIt {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    10%  { transform: translate(-18px, 8px) rotate(-0.8deg); }
+    20%  { transform: translate(15px, -12px) rotate(0.6deg); }
+    30%  { transform: translate(-10px, 6px) rotate(-0.4deg); }
+    40%  { transform: translate(8px, -5px) rotate(0.3deg); }
+    50%  { transform: translate(-5px, 3px) rotate(-0.2deg); }
+    60%  { transform: translate(4px, -3px) rotate(0.15deg); }
+    70%  { transform: translate(-3px, 2px) rotate(-0.1deg); }
+    80%  { transform: translate(2px, -1px) rotate(0.05deg); }
+    90%  { transform: translate(-1px, 1px) rotate(0deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+
+  @keyframes slamIn {
+    0%   { transform: scale(3); opacity: 0; }
+    55%  { transform: scale(0.94); opacity: 1; }
+    75%  { transform: scale(1.02); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes periodBounce {
+    0%   { transform: scale(4) translateY(-20px); opacity: 0; }
+    60%  { transform: scale(0.8) translateY(4px); opacity: 1; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  @keyframes coralFlash {
+    0%   { opacity: 0; }
+    12%  { opacity: 0.85; }
+    100% { opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="bg-glow"></div>
+<div class="grain"></div>
+<canvas id="particleCanvas" width="1080" height="1920"></canvas>
+
+<!-- Scene 1 -->
+<div class="scene-1" id="scene1">
+  <div class="s1 s1-we-asked"><span class="t">We asked</span></div>
+  <div class="s1 s1-our"><span class="t">our</span></div>
+  <div class="s1 s1-customers"><span class="t">customers</span></div>
+  <div class="s1 s1-about"><span class="t">about</span></div>
+  <div class="s1 s1-peerbound"><span class="t">Peerbound</span></div>
+  <div class="brand-line" id="brandLine"></div>
+</div>
+
+<!-- Flash overlay -->
+<div class="flash-overlay" id="flashOverlay"></div>
+
+<!-- Scene 2 -->
+<div class="scene-2-anchor" id="scene2Anchor">
+  <div class="scene-2" id="scene2">
+    <div class="s2-just" id="s2Just">Just</div>
+    <div class="s2-kidding" id="s2Kidding">Kidding<span class="s2-period" id="s2Period">.</span></div>
+  </div>
+</div>
+
+<!-- Scene 3 -->
+<div class="scene-3" id="scene3">
+  <div class="s3 s3-they-were"><span class="t">They were</span></div>
+  <div class="s3 s3-already"><span class="t">already</span></div>
+  <div class="s3 s3-talking"><span class="t">talking</span></div>
+  <div class="s3 s3-about-it"><span class="t">about it.</span></div>
+  <div class="s3-bar" id="s3Bar"></div>
+</div>
+
+<!-- Outro -->
+<div class="outro" id="outro"></div>
+
+<script>
+(function() {
+  const ease = 'cubic-bezier(0.19, 1, 0.22, 1)';
+  const startTime = performance.now();
+
+  // ── Utility: schedule an animation ──
+  function at(delayS, fn) {
+    setTimeout(fn, delayS * 1000);
+  }
+
+  // ── Utility: animate a slide-up reveal ──
+  function reveal(selector, delayS, durationS) {
+    at(delayS, () => {
+      const span = document.querySelector(selector + ' .t');
+      if (!span) return;
+      span.style.transition = `transform ${durationS}s ${ease}`;
+      span.style.transform = 'translateY(0)';
+    });
+  }
+
+  // ── SCENE 1 ──
+  const scene1 = document.getElementById('scene1');
+  const brandLine = document.getElementById('brandLine');
+
+  at(0.1, () => { scene1.style.opacity = '1'; });
+
+  reveal('.s1-we-asked',   0.25, 0.6);
+  reveal('.s1-our',        0.42, 0.6);
+  reveal('.s1-customers',  0.60, 0.65);
+  reveal('.s1-about',      0.85, 0.5);
+  reveal('.s1-peerbound',  1.00, 0.65);
+
+  // Coral underline
+  at(1.55, () => {
+    brandLine.style.transition = `width 0.8s ${ease}`;
+    brandLine.style.width = '200px';
+  });
+
+  // Scene 1 fade out
+  at(3.1, () => {
+    scene1.style.transition = 'opacity 0.5s ease';
+    scene1.style.opacity = '0';
+  });
+
+  // ── SCENE 2 ──
+  const flashOverlay = document.getElementById('flashOverlay');
+  const scene2 = document.getElementById('scene2');
+  const scene2Anchor = document.getElementById('scene2Anchor');
+  const s2Just = document.getElementById('s2Just');
+  const s2Kidding = document.getElementById('s2Kidding');
+  const s2Period = document.getElementById('s2Period');
+
+  // Flash
+  at(3.65, () => {
+    flashOverlay.style.animation = 'coralFlash 0.35s ease-out forwards';
+    scene2.style.opacity = '1';
+  });
+
+  // "Just" slam
+  at(3.7, () => {
+    s2Just.style.animation = 'slamIn 0.35s cubic-bezier(0.22, 0.68, 0.31, 1.02) forwards';
+  });
+
+  // "Kidding" slam + shake
+  at(3.95, () => {
+    s2Kidding.style.animation = 'slamIn 0.35s cubic-bezier(0.22, 0.68, 0.31, 1.02) forwards';
+    // Shake
+    scene2Anchor.style.animation = 'shakeIt 0.4s ease-out';
+  });
+
+  // Period bounce
+  at(4.35, () => {
+    s2Period.style.animation = 'periodBounce 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+  });
+
+  // Scene 2 fade out
+  at(5.65, () => {
+    scene2.style.transition = 'opacity 0.35s ease';
+    scene2.style.opacity = '0';
+  });
+
+  // ── SCENE 3 ──
+  const scene3 = document.getElementById('scene3');
+  const s3Bar = document.getElementById('s3Bar');
+
+  at(6.05, () => {
+    scene3.style.transition = 'opacity 0.5s ease';
+    scene3.style.opacity = '1';
+  });
+
+  reveal('.s3-they-were', 6.15, 0.6);
+  reveal('.s3-already',   6.45, 0.65);
+  reveal('.s3-talking',   6.80, 0.65);
+  reveal('.s3-about-it',  7.10, 0.6);
+
+  // Left accent bar
+  at(7.35, () => {
+    s3Bar.style.transition = `height 0.8s ${ease}`;
+    s3Bar.style.height = '360px';
+  });
+
+  // ── OUTRO ──
+  const outro = document.getElementById('outro');
+  at(9.6, () => {
+    outro.style.transition = 'opacity 0.9s ease';
+    outro.style.opacity = '1';
+  });
+
+  // ══════════════════════════════════════════
+  // PARTICLE & WAVEFORM CANVAS SYSTEM
+  // ══════════════════════════════════════════
+  const canvas = document.getElementById('particleCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Waveform config
+  const WAVEFORM_Y = 1402;
+  const WAVEFORM_BAR_COUNT = 70;
+  const WAVEFORM_BAR_WIDTH = 7;
+  const WAVEFORM_PADDING = 80;
+  const WAVEFORM_SPAN = 1080 - WAVEFORM_PADDING * 2;
+  const WAVEFORM_BAR_GAP = WAVEFORM_SPAN / WAVEFORM_BAR_COUNT;
+
+  // Waveform state
+  const waveformBars = [];
+  for (let i = 0; i < WAVEFORM_BAR_COUNT; i++) {
+    const normalizedPos = i / (WAVEFORM_BAR_COUNT - 1);
+    const envelope = Math.sin(normalizedPos * Math.PI);
+    waveformBars.push({
+      x: WAVEFORM_PADDING + i * WAVEFORM_BAR_GAP + WAVEFORM_BAR_GAP / 2,
+      currentHeight: 0,
+      targetHeight: 0,
+      envelope: envelope,
+      lastTargetChange: 0
+    });
+  }
+
+  // Particle config
+  const PARTICLE_COUNT = 60;
+  let currentScene = 1;
+  let elapsedTime = 0;
+
+  // Particles
+  const particles = [];
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const baseSize = 2 + Math.random() * 4;
+    particles.push({
+      x: 100 + Math.random() * 880,
+      y: 1382 + Math.random() * 80,
+      baseSize: baseSize,
+      size: baseSize,
+      maxOpacity: 0.15 + Math.random() * 0.35,
+      opacity: 0,
+      speedY: -(0.15 + Math.random() * 0.35),
+      life: Math.random(),
+      lifeSpeed: 0.003 + Math.random() * 0.004,
+      phase: Math.random() * Math.PI * 2,
+      // Scene 2 scatter
+      scatterVX: 0,
+      scatterVY: 0,
+      scattered: false,
+      // Scene 3 convergence
+      targetX: 540 + (Math.random() - 0.5) * 300,
+      targetY: 960 + (Math.random() - 0.5) * 200,
+      converging: false,
+      coralTransition: 0
+    });
+  }
+
+  // Scene tracking
+  let scene2Entered = false;
+  let scene3Entered = false;
+  let scene3GlowOpacity = 0;
+
+  function getElapsed() {
+    return (performance.now() - startTime) / 1000;
+  }
+
+  function updateWaveform(elapsed, dt) {
+    // Waveform visibility
+    let waveformOpacity = 0;
+    let coralMode = false;
+
+    // Scene 1: fade in 0.2–1.0s, fade out 2.6–3.1s
+    if (elapsed < 3.1) {
+      if (elapsed < 0.2) waveformOpacity = 0;
+      else if (elapsed < 1.0) waveformOpacity = (elapsed - 0.2) / 0.8;
+      else if (elapsed < 2.6) waveformOpacity = 1;
+      else waveformOpacity = 1 - (elapsed - 2.6) / 0.5;
+    }
+    // Scene 3: fade in after 7.5s over 1s
+    else if (elapsed > 7.5) {
+      waveformOpacity = Math.min(1, (elapsed - 7.5) / 1.0);
+      coralMode = true;
+    }
+
+    if (waveformOpacity <= 0) return;
+
+    // Update bar heights
+    for (let i = 0; i < waveformBars.length; i++) {
+      const bar = waveformBars[i];
+      if (elapsed - bar.lastTargetChange > 0.3) {
+        bar.targetHeight = (8 + Math.random() * 122) * bar.envelope;
+        bar.lastTargetChange = elapsed;
+      }
+      bar.currentHeight += (bar.targetHeight - bar.currentHeight) * 0.08;
+    }
+
+    // Draw bars
+    for (let i = 0; i < waveformBars.length; i++) {
+      const bar = waveformBars[i];
+      const h = bar.currentHeight;
+      const x = bar.x - WAVEFORM_BAR_WIDTH / 2;
+      const y = WAVEFORM_Y - h / 2;
+
+      if (coralMode) {
+        ctx.fillStyle = `rgba(254, 71, 89, ${waveformOpacity * 0.7})`;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = 'rgba(254, 71, 89, 0.5)';
+      } else {
+        ctx.fillStyle = `rgba(248, 248, 251, ${waveformOpacity * 0.35})`;
+        ctx.shadowBlur = 0;
+      }
+
+      // Rounded rect
+      const r = 3;
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + WAVEFORM_BAR_WIDTH - r, y);
+      ctx.quadraticCurveTo(x + WAVEFORM_BAR_WIDTH, y, x + WAVEFORM_BAR_WIDTH, y + r);
+      ctx.lineTo(x + WAVEFORM_BAR_WIDTH, y + h - r);
+      ctx.quadraticCurveTo(x + WAVEFORM_BAR_WIDTH, y + h, x + WAVEFORM_BAR_WIDTH - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  function updateParticles(elapsed, dt) {
+    // Detect scene transitions
+    if (elapsed >= 3.65 && !scene2Entered) {
+      scene2Entered = true;
+      currentScene = 2;
+      // Scatter particles
+      for (const p of particles) {
+        const angle = Math.random() * Math.PI * 2;
+        const force = 8 + Math.random() * 15;
+        p.scatterVX = Math.cos(angle) * force;
+        p.scatterVY = Math.sin(angle) * force;
+        p.scattered = true;
+      }
+    }
+
+    if (elapsed >= 6.05 && !scene3Entered) {
+      scene3Entered = true;
+      currentScene = 3;
+      // Reset particles for convergence
+      for (const p of particles) {
+        p.scattered = false;
+        p.converging = true;
+        p.opacity = 0;
+        p.size = p.baseSize;
+        // Scatter them around
+        p.x = Math.random() * 1080;
+        p.y = Math.random() * 1920;
+        p.coralTransition = 0;
+      }
+    }
+
+    for (const p of particles) {
+      if (currentScene === 1) {
+        // Drift upward, fade cycle
+        p.life += p.lifeSpeed;
+        if (p.life > 1) {
+          // Reset
+          p.life = 0;
+          p.x = 100 + Math.random() * 880;
+          p.y = 1382 + Math.random() * 80;
+          p.phase = Math.random() * Math.PI * 2;
+        }
+
+        const lifeRatio = p.life;
+        // Opacity: fade in first 15%, hold, fade out last 40%
+        let opacityMult;
+        if (lifeRatio < 0.15) opacityMult = lifeRatio / 0.15;
+        else if (lifeRatio > 0.6) opacityMult = 1 - (lifeRatio - 0.6) / 0.4;
+        else opacityMult = 1;
+
+        p.opacity = p.maxOpacity * opacityMult;
+        p.size = p.baseSize * (1 - lifeRatio * 0.5);
+        p.y += p.speedY;
+        p.x += Math.sin(elapsed * 2 + p.phase) * 0.3;
+
+        // Draw (white)
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(0.5, p.size), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(248, 248, 251, ${p.opacity})`;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = `rgba(248, 248, 251, ${p.opacity * 0.5})`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+      } else if (currentScene === 2) {
+        // Scatter and dissolve
+        if (p.scattered) {
+          p.x += p.scatterVX;
+          p.y += p.scatterVY;
+          p.scatterVX *= 0.96;
+          p.scatterVY *= 0.96;
+          p.opacity *= 0.97;
+          p.size *= 0.99;
+
+          if (p.opacity > 0.01) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, Math.max(0.5, p.size), 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(248, 248, 251, ${p.opacity})`;
+            ctx.fill();
+          }
+        }
+
+      } else if (currentScene === 3) {
+        // Converge toward target
+        const dx = p.targetX - p.x;
+        const dy = p.targetY - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const speed = 0.008 + (1 / (dist + 50)) * 2;
+
+        p.x += dx * speed;
+        p.y += dy * speed;
+
+        // Organic oscillation
+        p.x += Math.sin(elapsed * 1.5 + p.phase) * 0.4;
+        p.y += Math.cos(elapsed * 1.2 + p.phase * 1.3) * 0.3;
+
+        // Coral transition
+        p.coralTransition = Math.min(1, p.coralTransition + 0.015);
+
+        // Opacity increases
+        const targetOpacity = dist < 80 ? Math.min(0.7, p.maxOpacity * 1.2) : p.maxOpacity * 1.2;
+        p.opacity += (targetOpacity - p.opacity) * 0.03;
+
+        // Size grows when close
+        const targetSize = dist < 80 ? p.baseSize * 1.3 : p.baseSize;
+        p.size += (targetSize - p.size) * 0.05;
+
+        // Draw (coral)
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(0.5, p.size), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(254, 71, 89, ${p.opacity})`;
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = `rgba(254, 71, 89, ${p.opacity * 0.5})`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    // Scene 3 center glow after 8s
+    if (elapsed > 8 && currentScene === 3) {
+      scene3GlowOpacity = Math.min(0.06, scene3GlowOpacity + 0.0003);
+      const gradient = ctx.createRadialGradient(540, 960, 0, 540, 960, 250);
+      gradient.addColorStop(0, `rgba(254, 71, 89, ${scene3GlowOpacity})`);
+      gradient.addColorStop(1, 'rgba(254, 71, 89, 0)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(290, 710, 500, 500);
+    }
+  }
+
+  // ── Main render loop ──
+  let lastFrameTime = performance.now();
+
+  function render() {
+    const now = performance.now();
+    const dt = (now - lastFrameTime) / 1000;
+    lastFrameTime = now;
+    const elapsed = getElapsed();
+
+    ctx.clearRect(0, 0, 1080, 1920);
+
+    updateWaveform(elapsed, dt);
+    updateParticles(elapsed, dt);
+
+    // Stop after fade to black is complete
+    if (elapsed < 12) {
+      requestAnimationFrame(render);
+    }
+  }
+
+  requestAnimationFrame(render);
+})();
+</script>
+</body>
+</html>
