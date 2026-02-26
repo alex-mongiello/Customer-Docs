@@ -198,15 +198,17 @@
   /* ── TEXT REVEAL MASKS ── */
   .reveal-mask {
     overflow: hidden;
-    line-height: 1;
+    line-height: 1.2;
     text-align: center;
     width: 100%;
+    padding-bottom: 0.08em;
   }
 
   .reveal-mask .inner {
     display: block;
-    transform: translateY(110%);
+    transform: translateY(115%);
     will-change: transform;
+    padding-bottom: 0.05em;
   }
 
   /* ── SCENE 1 TYPOGRAPHY ── */
@@ -271,12 +273,13 @@
 
   .s2-word {
     font-weight: 800;
-    line-height: 0.85;
+    line-height: 1.05;
     letter-spacing: -0.05em;
     opacity: 0;
     transform: scale(2.5) translateY(10px);
     will-change: transform, opacity;
     filter: blur(8px);
+    padding-bottom: 0.05em;
   }
 
   .s2-just {
