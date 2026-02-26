@@ -4,135 +4,154 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1080, height=1920">
 <title>Peerbound Intro</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-deep: #08081a;
+    --bg-mid: #0e0e24;
+    --text-primary: #ededef;
+    --text-secondary: #8a8a9a;
+    --text-muted: rgba(237, 237, 239, 0.18);
+    --coral: #fe4759;
+    --coral-soft: rgba(254, 71, 89, 0.12);
+    --coral-glow: rgba(254, 71, 89, 0.25);
+    --purple: #7c3aed;
+    --purple-soft: rgba(124, 58, 237, 0.12);
+    --cyan: #06b6d4;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+    --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
 
   body {
     width: 1080px;
     height: 1920px;
     overflow: hidden;
-    font-family: 'Outfit', sans-serif;
-    background: #0d0224;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg-deep);
     position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* ── BACKGROUND LAYERS ── */
-  .bg {
+  /* ── MESH GRADIENT BACKGROUND ── */
+  .bg-mesh {
     position: absolute;
     inset: 0;
-    background: linear-gradient(170deg, #160340 0%, #0d0224 40%, #2a0a52 100%);
     z-index: 0;
+    background-color: var(--bg-deep);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 40% 25%, rgba(124, 58, 237, 0.14) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 60% at 75% 80%, rgba(254, 71, 89, 0.08) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 40% at 15% 70%, rgba(6, 182, 212, 0.06) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 50% at 85% 15%, rgba(99, 102, 241, 0.07) 0%, transparent 50%);
   }
 
-  /* Multiple animated light orbs for living background */
-  .bg-orb {
+  /* Ambient aurora blobs */
+  .aurora {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
+    filter: blur(100px);
     z-index: 1;
     pointer-events: none;
+    will-change: transform;
   }
-  .bg-orb-1 {
-    width: 700px; height: 700px;
-    bottom: 100px; right: -200px;
-    background: radial-gradient(circle, rgba(254,71,89,0.12) 0%, transparent 70%);
-    animation: orbFloat1 10s ease-in-out infinite alternate;
+  .aurora-1 {
+    width: 800px; height: 600px;
+    top: 5%; right: -20%;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.10) 0%, transparent 70%);
+    animation: aurora-drift-1 16s var(--ease-smooth) infinite alternate;
   }
-  .bg-orb-2 {
-    width: 500px; height: 500px;
-    top: 200px; left: -100px;
-    background: radial-gradient(circle, rgba(88,40,180,0.15) 0%, transparent 70%);
-    animation: orbFloat2 12s ease-in-out infinite alternate;
-  }
-  .bg-orb-3 {
+  .aurora-2 {
     width: 600px; height: 600px;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(254,71,89,0.06) 0%, transparent 70%);
-    animation: orbFloat3 8s ease-in-out infinite alternate;
+    bottom: 15%; left: -10%;
+    background: radial-gradient(circle, rgba(254, 71, 89, 0.07) 0%, transparent 70%);
+    animation: aurora-drift-2 20s var(--ease-smooth) infinite alternate;
   }
-  .bg-orb-4 {
-    width: 400px; height: 400px;
-    bottom: 500px; left: 200px;
-    background: radial-gradient(circle, rgba(60,20,140,0.12) 0%, transparent 70%);
-    animation: orbFloat4 14s ease-in-out infinite alternate;
-  }
-
-  @keyframes orbFloat1 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-80px, -60px) scale(1.15); }
-  }
-  @keyframes orbFloat2 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(50px, 80px) scale(0.9); }
-  }
-  @keyframes orbFloat3 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-    100% { transform: translate(-45%, -55%) scale(1.2); opacity: 1; }
-  }
-  @keyframes orbFloat4 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(40px, -50px) scale(1.1); }
+  .aurora-3 {
+    width: 500px; height: 500px;
+    top: 45%; left: 30%;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.05) 0%, transparent 70%);
+    animation: aurora-drift-3 14s var(--ease-smooth) infinite alternate;
   }
 
-  /* Vignette overlay */
-  .vignette {
+  @keyframes aurora-drift-1 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-60px, 40px) scale(1.12); }
+  }
+  @keyframes aurora-drift-2 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(50px, -35px) scale(0.92); }
+  }
+  @keyframes aurora-drift-3 {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+    100% { transform: translate(-30px, -50px) scale(1.15); opacity: 1; }
+  }
+
+  /* Dot grid overlay */
+  .dot-grid {
     position: absolute;
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    background: radial-gradient(ellipse 70% 60% at 50% 45%, transparent 0%, rgba(6,1,18,0.5) 70%, rgba(6,1,18,0.85) 100%);
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: 0;
+    transition: opacity 1.5s ease;
   }
 
-  /* Film grain */
+  /* Vignette */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: radial-gradient(ellipse 65% 55% at 50% 45%, transparent 0%, rgba(8,8,26,0.55) 65%, rgba(8,8,26,0.9) 100%);
+  }
+
+  /* Film grain — subtle overlay blend */
   .grain {
     position: absolute;
     inset: 0;
-    z-index: 999;
+    z-index: 998;
     pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-size: 512px 512px;
-    animation: grainShift 0.15s steps(4) infinite;
+    opacity: 0.028;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+    animation: grain-shift 0.12s steps(5) infinite;
   }
 
-  @keyframes grainShift {
+  @keyframes grain-shift {
     0% { transform: translate(0, 0); }
-    25% { transform: translate(-12px, 18px); }
-    50% { transform: translate(8px, -14px); }
-    75% { transform: translate(-6px, -8px); }
-    100% { transform: translate(14px, 6px); }
+    20% { transform: translate(-8px, 14px); }
+    40% { transform: translate(6px, -10px); }
+    60% { transform: translate(-4px, -6px); }
+    80% { transform: translate(10px, 4px); }
+    100% { transform: translate(0, 0); }
   }
 
   /* ── CANVAS LAYERS ── */
-  #bgCanvas {
+  #dustCanvas, #particleCanvas, #bloomCanvas {
     position: absolute;
     top: 0; left: 0;
     width: 1080px; height: 1920px;
-    z-index: 3;
     pointer-events: none;
   }
-  #particleCanvas {
-    position: absolute;
-    top: 0; left: 0;
-    width: 1080px; height: 1920px;
-    z-index: 5;
-    pointer-events: none;
-  }
+  #dustCanvas { z-index: 4; }
+  #particleCanvas { z-index: 6; }
   #bloomCanvas {
-    position: absolute;
-    top: 0; left: 0;
-    width: 1080px; height: 1920px;
-    z-index: 6;
-    pointer-events: none;
-    opacity: 0.35;
-    filter: blur(16px);
+    z-index: 7;
+    opacity: 0.3;
+    filter: blur(20px);
     mix-blend-mode: screen;
   }
 
-  /* ── LIGHT LEAKS ── */
-  .light-leak {
+  /* ── LIGHT SWEEP ── */
+  .light-sweep {
     position: absolute;
     inset: 0;
     z-index: 8;
@@ -140,131 +159,173 @@
     opacity: 0;
     overflow: hidden;
   }
-  .light-leak-inner {
+  .light-sweep-inner {
     position: absolute;
-    width: 400px;
-    height: 1920px;
-    top: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(254,71,89,0.08) 30%, rgba(255,200,180,0.12) 50%, rgba(254,71,89,0.08) 70%, transparent 100%);
-    filter: blur(30px);
-    transform: translateX(-500px) skewX(-8deg);
+    width: 300px;
+    height: 2200px;
+    top: -140px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255,255,255,0.02) 20%,
+      rgba(255,255,255,0.05) 45%,
+      rgba(255,255,255,0.06) 50%,
+      rgba(255,255,255,0.05) 55%,
+      rgba(255,255,255,0.02) 80%,
+      transparent 100%
+    );
+    filter: blur(8px);
+    transform: translateX(-400px) skewX(-6deg);
   }
 
   /* ── SCENE CONTAINERS ── */
-  .scene-1, .scene-2, .scene-3 {
+  .scene {
     position: absolute;
     inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0 90px;
+    padding: 0 100px;
     opacity: 0;
     pointer-events: none;
+    will-change: opacity, transform, filter;
   }
 
-  .scene-1 {
-    z-index: 10;
-    padding-bottom: 200px;
-  }
+  .scene-1 { z-index: 10; padding-bottom: 200px; }
+  .scene-2 { z-index: 30; }
+  .scene-3 { z-index: 40; padding-bottom: 140px; }
 
-  .scene-2 {
-    z-index: 30;
-  }
-
-  .scene-3 {
-    z-index: 40;
-    padding-bottom: 160px;
-  }
-
-  /* Slide-up mask wrappers */
-  .s1, .s3 {
+  /* ── TEXT REVEAL MASKS ── */
+  .reveal-mask {
     overflow: hidden;
     line-height: 1;
     text-align: center;
     width: 100%;
   }
 
-  .s1 .t, .s3 .t {
+  .reveal-mask .inner {
     display: block;
-    transform: translateY(105%);
+    transform: translateY(110%);
     will-change: transform;
   }
 
   /* ── SCENE 1 TYPOGRAPHY ── */
-  .s1-we-asked .t {
-    font-size: 88px;
-    font-weight: 800;
-    color: rgba(248,248,251,0.4);
-    letter-spacing: -0.04em;
-  }
-
-  .s1-our .t {
-    font-size: 88px;
-    font-weight: 800;
-    color: rgba(248,248,251,0.4);
-    letter-spacing: -0.04em;
-  }
-
-  .s1-customers .t {
-    font-size: 156px;
-    font-weight: 900;
-    color: #fe4759;
-    letter-spacing: -0.05em;
-  }
-
-  .s1-about .t {
+  .s1-line-a .inner {
     font-size: 72px;
-    font-weight: 600;
-    color: rgba(248,248,251,0.15);
-    letter-spacing: -0.04em;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
   }
 
-  .s1-peerbound .t {
-    font-size: 138px;
-    font-weight: 900;
-    color: #f8f8fb;
+  .s1-line-b .inner {
+    font-size: 72px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+
+  .s1-keyword .inner {
+    font-size: 148px;
+    font-weight: 800;
     letter-spacing: -0.045em;
+    line-height: 1.0;
+    background: linear-gradient(135deg, #fe4759 0%, #ff6b7a 50%, #fe4759 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  /* Coral underline */
-  .brand-line {
+  .s1-line-c .inner {
+    font-size: 56px;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .s1-brand .inner {
+    font-size: 132px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.04em;
+    line-height: 1.0;
+  }
+
+  /* Brand accent line */
+  .brand-accent {
     width: 0;
-    height: 10px;
-    background: #fe4759;
-    border-radius: 5px;
-    margin-top: 12px;
-    box-shadow: 0 0 20px rgba(254,71,89,0.4), 0 0 60px rgba(254,71,89,0.15);
+    height: 6px;
+    background: linear-gradient(90deg, var(--coral), #ff8090);
+    border-radius: 3px;
+    margin-top: 20px;
     will-change: width;
+    box-shadow:
+      0 0 12px var(--coral-glow),
+      0 0 40px rgba(254, 71, 89, 0.1);
   }
 
-  /* ── FLASH OVERLAY ── */
+  /* ── SCENE 2 ── */
+  .scene-2 { text-align: center; }
+
+  .s2-word {
+    font-weight: 800;
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    opacity: 0;
+    transform: scale(2.5) translateY(10px);
+    will-change: transform, opacity;
+    filter: blur(8px);
+  }
+
+  .s2-just {
+    font-size: 220px;
+    color: var(--text-primary);
+  }
+
+  .s2-kidding {
+    font-size: 220px;
+    background: linear-gradient(135deg, #fe4759 0%, #ff6b7a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .s2-period {
+    color: var(--text-primary);
+    -webkit-text-fill-color: var(--text-primary);
+    opacity: 0;
+    display: inline-block;
+    transform: scale(3) translateY(-15px);
+    will-change: transform, opacity;
+    filter: blur(4px);
+  }
+
+  /* ── FLASH + SHOCKWAVE ── */
   .flash-overlay {
     position: absolute;
     inset: 0;
-    background: #fe4759;
     z-index: 29;
-    opacity: 0;
     pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(254,71,89,0.9) 0%, rgba(254,71,89,0.4) 40%, transparent 70%);
   }
 
-  /* ── SHOCKWAVE ── */
   .shockwave {
     position: absolute;
     z-index: 31;
     pointer-events: none;
-    left: 50%;
-    top: 50%;
-    width: 0;
-    height: 0;
+    left: 50%; top: 50%;
+    width: 0; height: 0;
     border-radius: 50%;
-    border: 3px solid rgba(254,71,89,0.6);
-    box-shadow: 0 0 30px rgba(254,71,89,0.3), inset 0 0 30px rgba(254,71,89,0.1);
+    border: 2px solid rgba(254, 71, 89, 0.5);
+    box-shadow: 0 0 40px rgba(254, 71, 89, 0.2), inset 0 0 20px rgba(254, 71, 89, 0.08);
     transform: translate(-50%, -50%);
     opacity: 0;
   }
 
-  /* ── CHROMATIC ABERRATION / GLITCH ── */
+  /* Chromatic glitch */
   .glitch-layer {
     position: absolute;
     inset: 0;
@@ -276,201 +337,181 @@
   .glitch-line {
     position: absolute;
     width: 100%;
-    height: 3px;
-    background: rgba(254,71,89,0.4);
-    filter: blur(1px);
-  }
-
-  /* ── SCENE 2 ── */
-  .scene-2-anchor {
-    position: absolute;
-    inset: 0;
-    z-index: 30;
-    pointer-events: none;
-  }
-
-  .scene-2 {
-    text-align: center;
-  }
-
-  .s2-just, .s2-kidding {
-    font-size: 232px;
-    font-weight: 900;
-    line-height: 0.82;
-    letter-spacing: -0.06em;
-    opacity: 0;
-    transform: scale(3);
-    will-change: transform, opacity;
-  }
-
-  .s2-just {
-    color: #f8f8fb;
-  }
-
-  .s2-kidding {
-    color: #fe4759;
-  }
-
-  .s2-period {
-    color: #f8f8fb;
-    opacity: 0;
-    display: inline-block;
-    transform: scale(4) translateY(-20px);
-    will-change: transform, opacity;
+    background: rgba(254, 71, 89, 0.25);
   }
 
   /* ── SCENE 3 TYPOGRAPHY ── */
-  .s3-they-were .t {
-    font-size: 88px;
+  .s3-line-a .inner {
+    font-size: 72px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+
+  .s3-keyword-1 .inner {
+    font-size: 156px;
     font-weight: 800;
-    color: rgba(248,248,251,0.4);
-    letter-spacing: -0.04em;
+    letter-spacing: -0.05em;
+    line-height: 1.0;
+    background: linear-gradient(135deg, #fe4759 0%, #ff6b7a 50%, #fe4759 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  .s3-already .t {
-    font-size: 168px;
-    font-weight: 900;
-    color: #fe4759;
-    letter-spacing: -0.055em;
-    text-shadow: 0 0 60px rgba(254,71,89,0.25);
-  }
-
-  .s3-talking .t {
-    font-size: 168px;
-    font-weight: 900;
-    color: #f8f8fb;
-    letter-spacing: -0.055em;
-  }
-
-  .s3-about-it .t {
-    font-size: 88px;
+  .s3-keyword-2 .inner {
+    font-size: 156px;
     font-weight: 800;
-    color: rgba(248,248,251,0.4);
-    letter-spacing: -0.04em;
+    color: var(--text-primary);
+    letter-spacing: -0.05em;
+    line-height: 1.0;
   }
 
-  /* Scene 3 left accent bar */
-  .s3-bar {
+  .s3-line-b .inner {
+    font-size: 72px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+
+  /* Scene 3 accent bar — refined */
+  .s3-accent-bar {
     position: absolute;
-    left: 58px;
+    left: 64px;
     top: 50%;
     transform: translateY(-50%);
-    width: 8px;
+    width: 5px;
     height: 0;
-    background: #fe4759;
-    border-radius: 4px;
-    box-shadow: 0 0 30px rgba(254,71,89,0.25);
+    border-radius: 3px;
+    background: linear-gradient(180deg, var(--coral), rgba(254,71,89,0.4));
     will-change: height;
+    box-shadow:
+      0 0 20px var(--coral-glow),
+      0 0 60px rgba(254,71,89,0.08);
   }
 
   /* ── OUTRO ── */
   .outro {
     position: absolute;
     inset: 0;
-    background: #000;
+    background: var(--bg-deep);
     z-index: 60;
     opacity: 0;
     pointer-events: none;
   }
 
+  /* ── WAVEFORM GLOW BAR ── */
+  .waveform-glow {
+    position: absolute;
+    bottom: 460px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 20%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.08) 80%, transparent 100%);
+    border-radius: 1px;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
   /* ── KEYFRAMES ── */
-  @keyframes shakeIt {
-    0%   { transform: translate(0, 0) rotate(0deg); }
-    8%   { transform: translate(-18px, 8px) rotate(-0.8deg); }
-    16%  { transform: translate(15px, -12px) rotate(0.6deg); }
-    24%  { transform: translate(-12px, 6px) rotate(-0.5deg); }
-    32%  { transform: translate(10px, -8px) rotate(0.4deg); }
-    40%  { transform: translate(-8px, 5px) rotate(-0.3deg); }
-    50%  { transform: translate(5px, -3px) rotate(0.2deg); }
-    60%  { transform: translate(-4px, 3px) rotate(-0.15deg); }
-    70%  { transform: translate(3px, -2px) rotate(0.1deg); }
-    80%  { transform: translate(-2px, 1px) rotate(-0.05deg); }
-    90%  { transform: translate(1px, -1px) rotate(0deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
+  @keyframes slam-in {
+    0% { transform: scale(2.5) translateY(10px); opacity: 0; filter: blur(8px); }
+    60% { transform: scale(0.96) translateY(-2px); opacity: 1; filter: blur(0px); }
+    80% { transform: scale(1.01) translateY(0px); opacity: 1; filter: blur(0px); }
+    100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0px); }
   }
 
-  @keyframes slamIn {
-    0%   { transform: scale(3); opacity: 0; }
-    55%  { transform: scale(0.94); opacity: 1; }
-    75%  { transform: scale(1.02); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
+  @keyframes period-drop {
+    0% { transform: scale(3) translateY(-15px); opacity: 0; filter: blur(4px); }
+    65% { transform: scale(0.85) translateY(3px); opacity: 1; filter: blur(0); }
+    100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0); }
   }
 
-  @keyframes periodBounce {
-    0%   { transform: scale(4) translateY(-20px); opacity: 0; }
-    60%  { transform: scale(0.8) translateY(4px); opacity: 1; }
-    100% { transform: scale(1) translateY(0); opacity: 1; }
-  }
-
-  @keyframes coralFlash {
-    0%   { opacity: 0; }
-    12%  { opacity: 0.85; }
+  @keyframes flash-pulse {
+    0% { opacity: 0; }
+    10% { opacity: 0.7; }
     100% { opacity: 0; }
   }
 
-  @keyframes shockwaveExpand {
-    0%   { width: 0; height: 0; opacity: 0.8; border-width: 3px; }
-    100% { width: 900px; height: 900px; opacity: 0; border-width: 1px; }
+  @keyframes shockwave-expand {
+    0% { width: 0; height: 0; opacity: 0.7; border-width: 2px; }
+    100% { width: 1000px; height: 1000px; opacity: 0; border-width: 0.5px; }
+  }
+
+  @keyframes camera-shake {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    10%  { transform: translate(-14px, 6px) rotate(-0.6deg); }
+    20%  { transform: translate(12px, -10px) rotate(0.5deg); }
+    30%  { transform: translate(-10px, 5px) rotate(-0.4deg); }
+    40%  { transform: translate(8px, -6px) rotate(0.3deg); }
+    50%  { transform: translate(-5px, 3px) rotate(-0.2deg); }
+    60%  { transform: translate(3px, -2px) rotate(0.1deg); }
+    70%  { transform: translate(-2px, 1px) rotate(-0.05deg); }
+    80%  { transform: translate(1px, -1px) rotate(0deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
   }
 
   @keyframes breathe {
     0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.003); }
+    50%      { transform: scale(1.002); }
   }
 
-  @keyframes glowPulse {
-    0%, 100% { text-shadow: 0 0 40px rgba(254,71,89,0.2), 0 0 80px rgba(254,71,89,0.08); }
-    50%      { text-shadow: 0 0 60px rgba(254,71,89,0.35), 0 0 120px rgba(254,71,89,0.15); }
+  @keyframes glow-pulse-coral {
+    0%, 100% { filter: drop-shadow(0 0 30px rgba(254,71,89,0.15)) drop-shadow(0 0 60px rgba(254,71,89,0.05)); }
+    50%      { filter: drop-shadow(0 0 50px rgba(254,71,89,0.3)) drop-shadow(0 0 100px rgba(254,71,89,0.12)); }
   }
 
-  @keyframes glowPulseWhite {
-    0%, 100% { text-shadow: 0 0 30px rgba(248,248,251,0.15), 0 0 60px rgba(248,248,251,0.06); }
-    50%      { text-shadow: 0 0 50px rgba(248,248,251,0.25), 0 0 100px rgba(248,248,251,0.1); }
+  @keyframes glow-pulse-white {
+    0%, 100% { text-shadow: 0 0 30px rgba(237,237,239,0.1), 0 0 60px rgba(237,237,239,0.04); }
+    50%      { text-shadow: 0 0 45px rgba(237,237,239,0.2), 0 0 90px rgba(237,237,239,0.08); }
   }
 
-  @keyframes barGlow {
-    0%, 100% { box-shadow: 0 0 30px rgba(254,71,89,0.25), 0 0 60px rgba(254,71,89,0.1); }
-    50%      { box-shadow: 0 0 45px rgba(254,71,89,0.4), 0 0 90px rgba(254,71,89,0.2); }
+  @keyframes sweep {
+    0% { transform: translateX(-400px) skewX(-6deg); }
+    100% { transform: translateX(1480px) skewX(-6deg); }
   }
 
-  @keyframes lightLeakSweep {
-    0%   { transform: translateX(-500px) skewX(-8deg); }
-    100% { transform: translateX(1580px) skewX(-8deg); }
+  @keyframes accent-bar-glow {
+    0%, 100% { box-shadow: 0 0 20px var(--coral-glow), 0 0 50px rgba(254,71,89,0.06); }
+    50%      { box-shadow: 0 0 35px rgba(254,71,89,0.35), 0 0 80px rgba(254,71,89,0.12); }
   }
 </style>
 </head>
 <body>
 
 <!-- Background layers -->
-<div class="bg"></div>
-<div class="bg-orb bg-orb-1"></div>
-<div class="bg-orb bg-orb-2"></div>
-<div class="bg-orb bg-orb-3"></div>
-<div class="bg-orb bg-orb-4"></div>
+<div class="bg-mesh"></div>
+<div class="aurora aurora-1"></div>
+<div class="aurora aurora-2"></div>
+<div class="aurora aurora-3"></div>
+<div class="dot-grid" id="dotGrid"></div>
 <div class="vignette"></div>
 <div class="grain"></div>
 
 <!-- Canvas layers -->
-<canvas id="bgCanvas" width="1080" height="1920"></canvas>
+<canvas id="dustCanvas" width="1080" height="1920"></canvas>
 <canvas id="particleCanvas" width="1080" height="1920"></canvas>
 <canvas id="bloomCanvas" width="1080" height="1920"></canvas>
 
-<!-- Light leak overlays -->
-<div class="light-leak" id="lightLeak1">
-  <div class="light-leak-inner"></div>
-</div>
-<div class="light-leak" id="lightLeak2">
-  <div class="light-leak-inner"></div>
-</div>
+<!-- Light sweeps -->
+<div class="light-sweep" id="lightSweep1"><div class="light-sweep-inner"></div></div>
+<div class="light-sweep" id="lightSweep2"><div class="light-sweep-inner"></div></div>
 
-<!-- Scene 1 -->
-<div class="scene-1" id="scene1">
-  <div class="s1 s1-we-asked"><span class="t">We asked</span></div>
-  <div class="s1 s1-our"><span class="t">our</span></div>
-  <div class="s1 s1-customers"><span class="t" id="customersText">customers</span></div>
-  <div class="s1 s1-about"><span class="t">about</span></div>
-  <div class="s1 s1-peerbound"><span class="t" id="peerboundText">Peerbound</span></div>
-  <div class="brand-line" id="brandLine"></div>
+<!-- Waveform glow line -->
+<div class="waveform-glow" id="waveformGlow"></div>
+
+<!-- Scene 1: "We asked our customers about Peerbound" -->
+<div class="scene scene-1" id="scene1">
+  <div class="reveal-mask s1-line-a"><span class="inner">We asked</span></div>
+  <div class="reveal-mask s1-line-b"><span class="inner">our</span></div>
+  <div class="reveal-mask s1-keyword"><span class="inner" id="customersText">customers</span></div>
+  <div class="reveal-mask s1-line-c"><span class="inner">about</span></div>
+  <div class="reveal-mask s1-brand"><span class="inner" id="peerboundText">Peerbound</span></div>
+  <div class="brand-accent" id="brandAccent"></div>
 </div>
 
 <!-- Flash overlay -->
@@ -481,28 +522,26 @@
 
 <!-- Glitch lines -->
 <div class="glitch-layer" id="glitchLayer">
-  <div class="glitch-line" style="top: 38%"></div>
-  <div class="glitch-line" style="top: 42%; height: 2px; background: rgba(248,248,251,0.3);"></div>
-  <div class="glitch-line" style="top: 55%"></div>
-  <div class="glitch-line" style="top: 58%; height: 1px; background: rgba(100,200,255,0.3);"></div>
-  <div class="glitch-line" style="top: 63%"></div>
+  <div class="glitch-line" style="top: 36%; height: 2px;"></div>
+  <div class="glitch-line" style="top: 41%; height: 1px; background: rgba(237,237,239,0.2);"></div>
+  <div class="glitch-line" style="top: 54%; height: 2px;"></div>
+  <div class="glitch-line" style="top: 57%; height: 1px; background: rgba(6,182,212,0.2);"></div>
+  <div class="glitch-line" style="top: 62%; height: 1.5px;"></div>
 </div>
 
-<!-- Scene 2 -->
-<div class="scene-2-anchor" id="scene2Anchor">
-  <div class="scene-2" id="scene2">
-    <div class="s2-just" id="s2Just">Just</div>
-    <div class="s2-kidding" id="s2Kidding">Kidding<span class="s2-period" id="s2Period">.</span></div>
-  </div>
+<!-- Scene 2: "Just Kidding." -->
+<div class="scene scene-2" id="scene2">
+  <div class="s2-word s2-just" id="s2Just">Just</div>
+  <div class="s2-word s2-kidding" id="s2Kidding">Kidding<span class="s2-period" id="s2Period">.</span></div>
 </div>
 
-<!-- Scene 3 -->
-<div class="scene-3" id="scene3">
-  <div class="s3 s3-they-were"><span class="t">They were</span></div>
-  <div class="s3 s3-already"><span class="t" id="alreadyText">already</span></div>
-  <div class="s3 s3-talking"><span class="t" id="talkingText">talking</span></div>
-  <div class="s3 s3-about-it"><span class="t">about it.</span></div>
-  <div class="s3-bar" id="s3Bar"></div>
+<!-- Scene 3: "They were already talking about it." -->
+<div class="scene scene-3" id="scene3">
+  <div class="reveal-mask s3-line-a"><span class="inner">They were</span></div>
+  <div class="reveal-mask s3-keyword-1"><span class="inner" id="alreadyText">already</span></div>
+  <div class="reveal-mask s3-keyword-2"><span class="inner" id="talkingText">talking</span></div>
+  <div class="reveal-mask s3-line-b"><span class="inner">about it.</span></div>
+  <div class="s3-accent-bar" id="s3Bar"></div>
 </div>
 
 <!-- Outro -->
@@ -510,19 +549,21 @@
 
 <script>
 (function() {
-  const EASE = 'cubic-bezier(0.19, 1, 0.22, 1)';
-  const startTime = performance.now();
+  'use strict';
 
-  function at(delayS, fn) {
-    setTimeout(fn, delayS * 1000);
-  }
+  const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
+  const EASE_SMOOTH = 'cubic-bezier(0.22, 1, 0.36, 1)';
+  const T0 = performance.now();
 
-  function reveal(selector, delayS, durationS) {
-    at(delayS, () => {
-      const span = document.querySelector(selector + ' .t');
-      if (!span) return;
-      span.style.transition = `transform ${durationS}s ${EASE}`;
-      span.style.transform = 'translateY(0)';
+  function elapsed() { return (performance.now() - T0) / 1000; }
+  function at(s, fn) { setTimeout(fn, s * 1000); }
+
+  function reveal(selector, delay, dur) {
+    at(delay, () => {
+      const el = document.querySelector(selector + ' .inner');
+      if (!el) return;
+      el.style.transition = `transform ${dur}s ${EASE_OUT}`;
+      el.style.transform = 'translateY(0)';
     });
   }
 
@@ -530,50 +571,59 @@
   // SCENE 1
   // ════════════════════════════════════════
   const scene1 = document.getElementById('scene1');
-  const brandLine = document.getElementById('brandLine');
-  const customersText = document.getElementById('customersText');
-  const peerboundText = document.getElementById('peerboundText');
+  const brandAccent = document.getElementById('brandAccent');
+  const dotGrid = document.getElementById('dotGrid');
+  const waveformGlow = document.getElementById('waveformGlow');
 
-  at(0.1, () => { scene1.style.opacity = '1'; });
-
-  reveal('.s1-we-asked',   0.25, 0.6);
-  reveal('.s1-our',        0.42, 0.6);
-  reveal('.s1-customers',  0.60, 0.65);
-  reveal('.s1-about',      0.85, 0.5);
-  reveal('.s1-peerbound',  1.00, 0.65);
-
-  // Keyword glow pulses after reveal
-  at(1.3, () => {
-    customersText.style.animation = 'glowPulse 3s ease-in-out infinite';
-  });
-  at(1.7, () => {
-    peerboundText.style.animation = 'glowPulseWhite 3s ease-in-out infinite';
+  at(0.15, () => {
+    scene1.style.transition = 'opacity 0.8s ease';
+    scene1.style.opacity = '1';
+    dotGrid.style.opacity = '1';
+    waveformGlow.style.opacity = '1';
   });
 
-  // Breathing micro-animation on scene 1 after all reveals
-  at(1.8, () => {
-    scene1.style.animation = 'breathe 4s ease-in-out infinite';
+  // Staggered text reveals — 80ms gaps, smooth deceleration
+  reveal('.s1-line-a',  0.35, 0.7);
+  reveal('.s1-line-b',  0.50, 0.7);
+  reveal('.s1-keyword', 0.70, 0.75);
+  reveal('.s1-line-c',  0.95, 0.6);
+  reveal('.s1-brand',   1.12, 0.75);
+
+  // Keyword glow after reveal settles
+  at(1.5, () => {
+    document.getElementById('customersText').style.animation = 'glow-pulse-coral 4s ease-in-out infinite';
+  });
+  at(1.9, () => {
+    document.getElementById('peerboundText').style.animation = 'glow-pulse-white 4s ease-in-out infinite';
   });
 
-  // Coral underline
-  at(1.55, () => {
-    brandLine.style.transition = `width 0.8s ${EASE}`;
-    brandLine.style.width = '200px';
+  // Breathing micro-animation
+  at(2.0, () => {
+    scene1.style.animation = 'breathe 5s ease-in-out infinite';
   });
 
-  // Light leak transition out of Scene 1
-  const lightLeak1 = document.getElementById('lightLeak1');
-  at(2.8, () => {
-    lightLeak1.style.opacity = '1';
-    lightLeak1.querySelector('.light-leak-inner').style.animation = 'lightLeakSweep 0.9s ease-in-out forwards';
+  // Brand accent line
+  at(1.65, () => {
+    brandAccent.style.transition = `width 0.9s ${EASE_SMOOTH}`;
+    brandAccent.style.width = '180px';
   });
-  at(3.7, () => { lightLeak1.style.opacity = '0'; });
 
-  // Scene 1 fade out
-  at(3.1, () => {
-    scene1.style.transition = 'opacity 0.5s ease';
-    scene1.style.opacity = '0';
+  // Light sweep transition out
+  const ls1 = document.getElementById('lightSweep1');
+  at(3.0, () => {
+    ls1.style.opacity = '1';
+    ls1.querySelector('.light-sweep-inner').style.animation = 'sweep 0.85s ease-in-out forwards';
+  });
+  at(3.85, () => { ls1.style.opacity = '0'; });
+
+  // Scene 1 cinematic exit — scale up + blur + fade
+  at(3.2, () => {
     scene1.style.animation = 'none';
+    scene1.style.transition = 'opacity 0.5s ease, transform 0.6s ease, filter 0.6s ease';
+    scene1.style.opacity = '0';
+    scene1.style.transform = 'scale(1.06)';
+    scene1.style.filter = 'blur(6px)';
+    waveformGlow.style.opacity = '0';
   });
 
   // ════════════════════════════════════════
@@ -581,7 +631,6 @@
   // ════════════════════════════════════════
   const flashOverlay = document.getElementById('flashOverlay');
   const scene2 = document.getElementById('scene2');
-  const scene2Anchor = document.getElementById('scene2Anchor');
   const s2Just = document.getElementById('s2Just');
   const s2Kidding = document.getElementById('s2Kidding');
   const s2Period = document.getElementById('s2Period');
@@ -589,508 +638,438 @@
   const glitchLayer = document.getElementById('glitchLayer');
 
   // Flash
-  at(3.65, () => {
-    flashOverlay.style.animation = 'coralFlash 0.35s ease-out forwards';
+  at(3.75, () => {
+    flashOverlay.style.animation = 'flash-pulse 0.4s ease-out forwards';
     scene2.style.opacity = '1';
   });
 
-  // "Just" slam
-  at(3.7, () => {
-    s2Just.style.animation = 'slamIn 0.35s cubic-bezier(0.22, 0.68, 0.31, 1.02) forwards';
+  // "Just" slam in
+  at(3.8, () => {
+    s2Just.style.animation = 'slam-in 0.4s cubic-bezier(0.22, 0.68, 0.31, 1.02) forwards';
   });
 
-  // "Kidding" slam + shake + shockwave + glitch
-  at(3.95, () => {
-    s2Kidding.style.animation = 'slamIn 0.35s cubic-bezier(0.22, 0.68, 0.31, 1.02) forwards';
-    scene2Anchor.style.animation = 'shakeIt 0.5s ease-out';
+  // "Kidding" slam + impact effects
+  at(4.05, () => {
+    s2Kidding.style.animation = 'slam-in 0.4s cubic-bezier(0.22, 0.68, 0.31, 1.02) forwards';
+    scene2.style.animation = 'camera-shake 0.45s ease-out';
 
-    // Shockwave ring
-    shockwave.style.animation = 'shockwaveExpand 0.6s ease-out forwards';
+    shockwave.style.animation = 'shockwave-expand 0.65s ease-out forwards';
 
-    // Glitch flicker
-    glitchLayer.style.opacity = '1';
-    setTimeout(() => { glitchLayer.style.opacity = '0'; }, 60);
-    setTimeout(() => { glitchLayer.style.opacity = '0.7'; }, 100);
-    setTimeout(() => { glitchLayer.style.opacity = '0'; }, 150);
-    setTimeout(() => { glitchLayer.style.opacity = '0.4'; }, 200);
-    setTimeout(() => { glitchLayer.style.opacity = '0'; }, 240);
+    // Chromatic glitch flicker
+    const g = glitchLayer;
+    g.style.opacity = '1';
+    setTimeout(() => { g.style.opacity = '0'; }, 50);
+    setTimeout(() => { g.style.opacity = '0.6'; }, 90);
+    setTimeout(() => { g.style.opacity = '0'; }, 130);
+    setTimeout(() => { g.style.opacity = '0.3'; }, 170);
+    setTimeout(() => { g.style.opacity = '0'; }, 210);
   });
 
-  // Period bounce
-  at(4.35, () => {
-    s2Period.style.animation = 'periodBounce 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+  // Period drop
+  at(4.45, () => {
+    s2Period.style.animation = 'period-drop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
   });
 
-  // Breathing on Scene 2 hold
-  at(4.7, () => {
-    scene2.style.animation = 'breathe 3s ease-in-out infinite';
+  // Breathing hold
+  at(4.85, () => {
+    scene2.style.animation = 'breathe 3.5s ease-in-out infinite';
   });
 
-  // Scene 2 fade out
-  at(5.65, () => {
-    scene2.style.transition = 'opacity 0.35s ease';
-    scene2.style.opacity = '0';
+  // Scene 2 cinematic exit
+  at(5.8, () => {
     scene2.style.animation = 'none';
+    scene2.style.transition = 'opacity 0.4s ease, transform 0.5s ease, filter 0.5s ease';
+    scene2.style.opacity = '0';
+    scene2.style.transform = 'scale(1.05)';
+    scene2.style.filter = 'blur(5px)';
   });
 
-  // Light leak into Scene 3
-  const lightLeak2 = document.getElementById('lightLeak2');
-  at(5.7, () => {
-    lightLeak2.style.opacity = '1';
-    lightLeak2.querySelector('.light-leak-inner').style.animation = 'lightLeakSweep 1s ease-in-out forwards';
+  // Light sweep into Scene 3
+  const ls2 = document.getElementById('lightSweep2');
+  at(5.85, () => {
+    ls2.style.opacity = '1';
+    ls2.querySelector('.light-sweep-inner').style.animation = 'sweep 0.9s ease-in-out forwards';
   });
-  at(6.7, () => { lightLeak2.style.opacity = '0'; });
+  at(6.75, () => { ls2.style.opacity = '0'; });
 
   // ════════════════════════════════════════
   // SCENE 3
   // ════════════════════════════════════════
   const scene3 = document.getElementById('scene3');
   const s3Bar = document.getElementById('s3Bar');
-  const alreadyText = document.getElementById('alreadyText');
-  const talkingText = document.getElementById('talkingText');
 
-  at(6.05, () => {
-    scene3.style.transition = 'opacity 0.5s ease';
+  // Enter from depth
+  at(6.15, () => {
+    scene3.style.transform = 'scale(0.94)';
+    scene3.style.filter = 'blur(3px)';
+    scene3.style.transition = 'opacity 0.6s ease, transform 0.8s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)), filter 0.8s ease';
     scene3.style.opacity = '1';
+    // Slight delay to trigger the transform transition
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        scene3.style.transform = 'scale(1)';
+        scene3.style.filter = 'blur(0px)';
+      });
+    });
   });
 
-  reveal('.s3-they-were', 6.15, 0.6);
-  reveal('.s3-already',   6.45, 0.65);
-  reveal('.s3-talking',   6.80, 0.65);
-  reveal('.s3-about-it',  7.10, 0.6);
+  reveal('.s3-line-a',    6.35, 0.7);
+  reveal('.s3-keyword-1', 6.60, 0.75);
+  reveal('.s3-keyword-2', 6.90, 0.75);
+  reveal('.s3-line-b',    7.20, 0.65);
 
-  // Keyword glow pulses in Scene 3
-  at(7.15, () => {
-    alreadyText.style.animation = 'glowPulse 3s ease-in-out infinite';
+  // Keyword glows
+  at(7.30, () => {
+    document.getElementById('alreadyText').style.animation = 'glow-pulse-coral 4s ease-in-out infinite';
   });
-  at(7.5, () => {
-    talkingText.style.animation = 'glowPulseWhite 3s ease-in-out infinite';
-  });
-
-  // Breathing on Scene 3
-  at(7.8, () => {
-    scene3.style.animation = 'breathe 4s ease-in-out infinite';
+  at(7.60, () => {
+    document.getElementById('talkingText').style.animation = 'glow-pulse-white 4s ease-in-out infinite';
   });
 
-  // Left accent bar
-  at(7.35, () => {
-    s3Bar.style.transition = `height 0.8s ${EASE}`;
-    s3Bar.style.height = '360px';
+  // Breathing
+  at(7.90, () => {
+    scene3.style.transition = '';
+    scene3.style.animation = 'breathe 5s ease-in-out infinite';
   });
-  // Bar glow pulse after it grows
-  at(8.2, () => {
-    s3Bar.style.animation = 'barGlow 2.5s ease-in-out infinite';
+
+  // Accent bar
+  at(7.45, () => {
+    s3Bar.style.transition = `height 0.9s ${EASE_SMOOTH}`;
+    s3Bar.style.height = '340px';
+  });
+  at(8.4, () => {
+    s3Bar.style.animation = 'accent-bar-glow 3s ease-in-out infinite';
   });
 
   // ════════════════════════════════════════
   // OUTRO
   // ════════════════════════════════════════
   const outro = document.getElementById('outro');
-  at(9.6, () => {
-    outro.style.transition = 'opacity 0.9s ease';
+  at(9.8, () => {
+    outro.style.transition = 'opacity 1s ease';
     outro.style.opacity = '1';
   });
 
   // ════════════════════════════════════════
-  // CANVAS: AMBIENT BOKEH DUST (bgCanvas)
+  // CANVAS: AMBIENT DUST (dustCanvas)
   // ════════════════════════════════════════
-  const bgCanvas = document.getElementById('bgCanvas');
-  const bgCtx = bgCanvas.getContext('2d');
+  const dustCvs = document.getElementById('dustCanvas');
+  const dustCtx = dustCvs.getContext('2d');
 
-  const DUST_COUNT = 120;
-  const dustParticles = [];
+  const DUST_COUNT = 80;
+  const dust = [];
   for (let i = 0; i < DUST_COUNT; i++) {
-    dustParticles.push({
+    dust.push({
       x: Math.random() * 1080,
       y: Math.random() * 1920,
-      size: 1 + Math.random() * 3,
-      opacity: 0.03 + Math.random() * 0.12,
-      speedX: (Math.random() - 0.5) * 0.15,
-      speedY: -(0.05 + Math.random() * 0.2),
+      r: 0.8 + Math.random() * 2.2,
+      op: 0.02 + Math.random() * 0.08,
+      vx: (Math.random() - 0.5) * 0.1,
+      vy: -(0.03 + Math.random() * 0.12),
       phase: Math.random() * Math.PI * 2,
-      phaseSpeed: 0.3 + Math.random() * 0.5
+      freq: 0.2 + Math.random() * 0.4
     });
   }
 
-  function renderDust(elapsed) {
-    bgCtx.clearRect(0, 0, 1080, 1920);
-    for (const d of dustParticles) {
-      d.x += d.speedX + Math.sin(elapsed * d.phaseSpeed + d.phase) * 0.08;
-      d.y += d.speedY;
-
-      // Wrap around
+  function renderDust(t) {
+    dustCtx.clearRect(0, 0, 1080, 1920);
+    for (const d of dust) {
+      d.x += d.vx + Math.sin(t * d.freq + d.phase) * 0.05;
+      d.y += d.vy;
       if (d.y < -10) { d.y = 1930; d.x = Math.random() * 1080; }
       if (d.x < -10) d.x = 1090;
       if (d.x > 1090) d.x = -10;
 
-      const flicker = 0.7 + 0.3 * Math.sin(elapsed * 1.5 + d.phase);
-      const op = d.opacity * flicker;
-
-      bgCtx.beginPath();
-      bgCtx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
-      bgCtx.fillStyle = `rgba(248, 248, 251, ${op})`;
-      bgCtx.shadowBlur = d.size * 4;
-      bgCtx.shadowColor = `rgba(248, 248, 251, ${op * 0.4})`;
-      bgCtx.fill();
+      const flicker = 0.7 + 0.3 * Math.sin(t * 1.2 + d.phase);
+      dustCtx.beginPath();
+      dustCtx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      dustCtx.fillStyle = `rgba(237, 237, 239, ${d.op * flicker})`;
+      dustCtx.fill();
     }
-    bgCtx.shadowBlur = 0;
   }
 
   // ════════════════════════════════════════
   // CANVAS: PARTICLES + WAVEFORM (particleCanvas)
   // ════════════════════════════════════════
-  const canvas = document.getElementById('particleCanvas');
-  const ctx = canvas.getContext('2d');
+  const pCvs = document.getElementById('particleCanvas');
+  const pCtx = pCvs.getContext('2d');
 
-  // Waveform config
-  const WAVEFORM_Y = 1402;
-  const WAVEFORM_BAR_COUNT = 70;
-  const WAVEFORM_BAR_WIDTH = 7;
-  const WAVEFORM_PADDING = 80;
-  const WAVEFORM_SPAN = 1080 - WAVEFORM_PADDING * 2;
-  const WAVEFORM_BAR_GAP = WAVEFORM_SPAN / WAVEFORM_BAR_COUNT;
+  // Waveform
+  const WF_Y = 1402;
+  const WF_BARS = 60;
+  const WF_W = 5;
+  const WF_PAD = 100;
+  const WF_SPAN = 1080 - WF_PAD * 2;
+  const WF_GAP = WF_SPAN / WF_BARS;
 
-  const waveformBars = [];
-  for (let i = 0; i < WAVEFORM_BAR_COUNT; i++) {
-    const normalizedPos = i / (WAVEFORM_BAR_COUNT - 1);
-    const envelope = Math.sin(normalizedPos * Math.PI);
-    waveformBars.push({
-      x: WAVEFORM_PADDING + i * WAVEFORM_BAR_GAP + WAVEFORM_BAR_GAP / 2,
-      currentHeight: 0,
-      targetHeight: 0,
-      envelope: envelope,
-      lastTargetChange: 0
+  const bars = [];
+  for (let i = 0; i < WF_BARS; i++) {
+    const norm = i / (WF_BARS - 1);
+    bars.push({
+      x: WF_PAD + i * WF_GAP + WF_GAP / 2,
+      h: 0, target: 0,
+      env: Math.sin(norm * Math.PI),
+      lastChange: 0
     });
   }
 
-  // Particles — doubled to 120
-  const PARTICLE_COUNT = 120;
-  let currentScene = 1;
-  const particles = [];
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
-    const baseSize = 1.5 + Math.random() * 4.5;
-    // Assign to a random waveform bar for spawning
-    const barIndex = Math.floor(Math.random() * WAVEFORM_BAR_COUNT);
-    const barX = waveformBars[barIndex].x;
-    particles.push({
-      x: barX + (Math.random() - 0.5) * 8,
-      y: WAVEFORM_Y - (Math.random() * 30),
-      baseSize: baseSize,
-      size: baseSize,
-      maxOpacity: 0.12 + Math.random() * 0.45,
-      opacity: 0,
-      speedY: -(0.2 + Math.random() * 0.45),
-      life: Math.random(),
-      lifeSpeed: 0.002 + Math.random() * 0.004,
-      phase: Math.random() * Math.PI * 2,
-      barIndex: barIndex,
-      // Trail: store last few positions
-      trail: [],
-      trailLength: 2 + Math.floor(Math.random() * 4),
-      // Scene 2 scatter
-      scatterVX: 0,
-      scatterVY: 0,
-      scattered: false,
-      // Scene 3 convergence
-      targetX: 540 + (Math.random() - 0.5) * 300,
-      targetY: 960 + (Math.random() - 0.5) * 200,
-      converging: false,
-      coralTransition: 0
+  // Particles
+  const P_COUNT = 100;
+  let curScene = 1;
+  const parts = [];
+  for (let i = 0; i < P_COUNT; i++) {
+    const sz = 1.2 + Math.random() * 3.5;
+    const bi = Math.floor(Math.random() * WF_BARS);
+    parts.push({
+      x: bars[bi].x + (Math.random() - 0.5) * 6,
+      y: WF_Y - Math.random() * 25,
+      sz, baseSz: sz,
+      maxOp: 0.08 + Math.random() * 0.35,
+      op: 0, vy: -(0.15 + Math.random() * 0.35),
+      life: Math.random(), lifeSpd: 0.002 + Math.random() * 0.003,
+      phase: Math.random() * Math.PI * 2, bi,
+      trail: [], trailLen: 2 + Math.floor(Math.random() * 3),
+      sVX: 0, sVY: 0, scattered: false,
+      tX: 540 + (Math.random() - 0.5) * 280,
+      tY: 960 + (Math.random() - 0.5) * 180,
+      converging: false, coralT: 0
     });
   }
 
-  let scene2Entered = false;
-  let scene3Entered = false;
-  let scene3GlowOpacity = 0;
+  let s2Entered = false, s3Entered = false, s3Glow = 0;
 
-  function getElapsed() {
-    return (performance.now() - startTime) / 1000;
-  }
-
-  function updateWaveform(elapsed) {
-    let waveformOpacity = 0;
+  function drawWaveform(t) {
+    let wfOp = 0;
     let coralMode = false;
 
-    if (elapsed < 3.1) {
-      if (elapsed < 0.2) waveformOpacity = 0;
-      else if (elapsed < 1.0) waveformOpacity = (elapsed - 0.2) / 0.8;
-      else if (elapsed < 2.6) waveformOpacity = 1;
-      else waveformOpacity = 1 - (elapsed - 2.6) / 0.5;
-    } else if (elapsed > 7.5) {
-      waveformOpacity = Math.min(1, (elapsed - 7.5) / 1.0);
+    if (t < 3.2) {
+      if (t < 0.25) wfOp = 0;
+      else if (t < 1.0) wfOp = (t - 0.25) / 0.75;
+      else if (t < 2.7) wfOp = 1;
+      else wfOp = 1 - (t - 2.7) / 0.5;
+    } else if (t > 7.6) {
+      wfOp = Math.min(1, (t - 7.6) / 1.0);
       coralMode = true;
     }
+    if (wfOp <= 0) return;
 
-    if (waveformOpacity <= 0) return;
-
-    for (let i = 0; i < waveformBars.length; i++) {
-      const bar = waveformBars[i];
-      if (elapsed - bar.lastTargetChange > 0.3) {
-        bar.targetHeight = (8 + Math.random() * 122) * bar.envelope;
-        bar.lastTargetChange = elapsed;
+    for (const b of bars) {
+      if (t - b.lastChange > 0.25) {
+        b.target = (6 + Math.random() * 100) * b.env;
+        b.lastChange = t;
       }
-      bar.currentHeight += (bar.targetHeight - bar.currentHeight) * 0.08;
+      b.h += (b.target - b.h) * 0.07;
     }
 
-    for (let i = 0; i < waveformBars.length; i++) {
-      const bar = waveformBars[i];
-      const h = bar.currentHeight;
-      const x = bar.x - WAVEFORM_BAR_WIDTH / 2;
-      const y = WAVEFORM_Y - h / 2;
+    for (const b of bars) {
+      const h = b.h;
+      const x = b.x - WF_W / 2;
+      const y = WF_Y - h / 2;
+      const r = 2.5;
 
       if (coralMode) {
-        ctx.fillStyle = `rgba(254, 71, 89, ${waveformOpacity * 0.7})`;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = `rgba(254, 71, 89, ${waveformOpacity * 0.5})`;
+        const grad = pCtx.createLinearGradient(x, y, x, y + h);
+        grad.addColorStop(0, `rgba(254, 71, 89, ${wfOp * 0.55})`);
+        grad.addColorStop(0.5, `rgba(254, 71, 89, ${wfOp * 0.7})`);
+        grad.addColorStop(1, `rgba(254, 71, 89, ${wfOp * 0.55})`);
+        pCtx.fillStyle = grad;
       } else {
-        ctx.fillStyle = `rgba(248, 248, 251, ${waveformOpacity * 0.35})`;
-        ctx.shadowBlur = 4;
-        ctx.shadowColor = `rgba(248, 248, 251, ${waveformOpacity * 0.15})`;
+        const grad = pCtx.createLinearGradient(x, y, x, y + h);
+        grad.addColorStop(0, `rgba(237, 237, 239, ${wfOp * 0.15})`);
+        grad.addColorStop(0.5, `rgba(237, 237, 239, ${wfOp * 0.3})`);
+        grad.addColorStop(1, `rgba(237, 237, 239, ${wfOp * 0.15})`);
+        pCtx.fillStyle = grad;
       }
 
-      const r = 3;
-      ctx.beginPath();
-      ctx.moveTo(x + r, y);
-      ctx.lineTo(x + WAVEFORM_BAR_WIDTH - r, y);
-      ctx.quadraticCurveTo(x + WAVEFORM_BAR_WIDTH, y, x + WAVEFORM_BAR_WIDTH, y + r);
-      ctx.lineTo(x + WAVEFORM_BAR_WIDTH, y + h - r);
-      ctx.quadraticCurveTo(x + WAVEFORM_BAR_WIDTH, y + h, x + WAVEFORM_BAR_WIDTH - r, y + h);
-      ctx.lineTo(x + r, y + h);
-      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-      ctx.lineTo(x, y + r);
-      ctx.quadraticCurveTo(x, y, x + r, y);
-      ctx.closePath();
-      ctx.fill();
+      pCtx.beginPath();
+      pCtx.moveTo(x + r, y);
+      pCtx.lineTo(x + WF_W - r, y);
+      pCtx.quadraticCurveTo(x + WF_W, y, x + WF_W, y + r);
+      pCtx.lineTo(x + WF_W, y + h - r);
+      pCtx.quadraticCurveTo(x + WF_W, y + h, x + WF_W - r, y + h);
+      pCtx.lineTo(x + r, y + h);
+      pCtx.quadraticCurveTo(x, y + h, x, y + h - r);
+      pCtx.lineTo(x, y + r);
+      pCtx.quadraticCurveTo(x, y, x + r, y);
+      pCtx.closePath();
+      pCtx.fill();
     }
-    ctx.shadowBlur = 0;
   }
 
-  function updateParticles(elapsed) {
-    if (elapsed >= 3.65 && !scene2Entered) {
-      scene2Entered = true;
-      currentScene = 2;
-      for (const p of particles) {
-        const angle = Math.random() * Math.PI * 2;
-        const force = 8 + Math.random() * 15;
-        p.scatterVX = Math.cos(angle) * force;
-        p.scatterVY = Math.sin(angle) * force;
+  function drawParticles(t) {
+    if (t >= 3.75 && !s2Entered) {
+      s2Entered = true;
+      curScene = 2;
+      for (const p of parts) {
+        const a = Math.random() * Math.PI * 2;
+        const f = 6 + Math.random() * 12;
+        p.sVX = Math.cos(a) * f;
+        p.sVY = Math.sin(a) * f;
         p.scattered = true;
         p.trail = [];
       }
     }
 
-    if (elapsed >= 6.05 && !scene3Entered) {
-      scene3Entered = true;
-      currentScene = 3;
-      for (const p of particles) {
+    if (t >= 6.15 && !s3Entered) {
+      s3Entered = true;
+      curScene = 3;
+      for (const p of parts) {
         p.scattered = false;
         p.converging = true;
-        p.opacity = 0;
-        p.size = p.baseSize;
+        p.op = 0;
+        p.sz = p.baseSz;
         p.x = Math.random() * 1080;
         p.y = Math.random() * 1920;
-        p.coralTransition = 0;
+        p.coralT = 0;
         p.trail = [];
       }
     }
 
-    for (const p of particles) {
-      if (currentScene === 1) {
-        p.life += p.lifeSpeed;
+    for (const p of parts) {
+      if (curScene === 1) {
+        p.life += p.lifeSpd;
         if (p.life > 1) {
-          // Reset — spawn from waveform bar tip
           p.life = 0;
-          const bar = waveformBars[p.barIndex];
-          p.x = bar.x + (Math.random() - 0.5) * 8;
-          p.y = WAVEFORM_Y - bar.currentHeight / 2 - Math.random() * 5;
+          const b = bars[p.bi];
+          p.x = b.x + (Math.random() - 0.5) * 6;
+          p.y = WF_Y - b.h / 2 - Math.random() * 4;
           p.phase = Math.random() * Math.PI * 2;
           p.trail = [];
         }
 
-        const lifeRatio = p.life;
-        let opacityMult;
-        if (lifeRatio < 0.15) opacityMult = lifeRatio / 0.15;
-        else if (lifeRatio > 0.6) opacityMult = 1 - (lifeRatio - 0.6) / 0.4;
-        else opacityMult = 1;
+        const lr = p.life;
+        let om = lr < 0.15 ? lr / 0.15 : lr > 0.6 ? 1 - (lr - 0.6) / 0.4 : 1;
+        p.op = p.maxOp * om;
+        p.sz = p.baseSz * (1 - lr * 0.4);
+        p.y += p.vy;
+        p.x += Math.sin(t * 1.8 + p.phase) * 0.25;
 
-        p.opacity = p.maxOpacity * opacityMult;
-        p.size = p.baseSize * (1 - lifeRatio * 0.5);
-        p.y += p.speedY;
-        p.x += Math.sin(elapsed * 2 + p.phase) * 0.3;
+        p.trail.push({ x: p.x, y: p.y, op: p.op, sz: p.sz });
+        if (p.trail.length > p.trailLen) p.trail.shift();
 
-        // Store trail
-        p.trail.push({ x: p.x, y: p.y, op: p.opacity, sz: p.size });
-        if (p.trail.length > p.trailLength) p.trail.shift();
-
-        // Draw trail
-        for (let t = 0; t < p.trail.length - 1; t++) {
-          const pt = p.trail[t];
-          const trailFade = (t + 1) / p.trail.length;
-          const tOp = pt.op * trailFade * 0.3;
-          if (tOp > 0.005) {
-            ctx.beginPath();
-            ctx.arc(pt.x, pt.y, Math.max(0.3, pt.sz * trailFade * 0.6), 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(248, 248, 251, ${tOp})`;
-            ctx.fill();
+        // Trail
+        for (let i = 0; i < p.trail.length - 1; i++) {
+          const pt = p.trail[i];
+          const fade = (i + 1) / p.trail.length;
+          const tOp = pt.op * fade * 0.25;
+          if (tOp > 0.004) {
+            pCtx.beginPath();
+            pCtx.arc(pt.x, pt.y, Math.max(0.3, pt.sz * fade * 0.5), 0, Math.PI * 2);
+            pCtx.fillStyle = `rgba(237, 237, 239, ${tOp})`;
+            pCtx.fill();
           }
         }
 
-        // Draw main particle
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, Math.max(0.5, p.size), 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(248, 248, 251, ${p.opacity})`;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = `rgba(248, 248, 251, ${p.opacity * 0.5})`;
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        // Main
+        pCtx.beginPath();
+        pCtx.arc(p.x, p.y, Math.max(0.4, p.sz), 0, Math.PI * 2);
+        pCtx.fillStyle = `rgba(237, 237, 239, ${p.op})`;
+        pCtx.fill();
 
-      } else if (currentScene === 2) {
+      } else if (curScene === 2) {
         if (p.scattered) {
-          p.x += p.scatterVX;
-          p.y += p.scatterVY;
-          p.scatterVX *= 0.96;
-          p.scatterVY *= 0.96;
-          p.opacity *= 0.97;
-          p.size *= 0.99;
+          p.x += p.sVX;
+          p.y += p.sVY;
+          p.sVX *= 0.96;
+          p.sVY *= 0.96;
+          p.op *= 0.97;
+          p.sz *= 0.99;
 
-          if (p.opacity > 0.01) {
-            // Draw scatter trail
-            p.trail.push({ x: p.x, y: p.y, op: p.opacity, sz: p.size });
-            if (p.trail.length > 5) p.trail.shift();
+          if (p.op > 0.008) {
+            p.trail.push({ x: p.x, y: p.y, op: p.op, sz: p.sz });
+            if (p.trail.length > 4) p.trail.shift();
 
-            for (let t = 0; t < p.trail.length - 1; t++) {
-              const pt = p.trail[t];
-              const trailFade = (t + 1) / p.trail.length;
-              const tOp = pt.op * trailFade * 0.4;
-              ctx.beginPath();
-              ctx.arc(pt.x, pt.y, Math.max(0.3, pt.sz * 0.5), 0, Math.PI * 2);
-              ctx.fillStyle = `rgba(254, 71, 89, ${tOp})`;
-              ctx.fill();
+            for (let i = 0; i < p.trail.length - 1; i++) {
+              const pt = p.trail[i];
+              const fade = (i + 1) / p.trail.length;
+              pCtx.beginPath();
+              pCtx.arc(pt.x, pt.y, Math.max(0.3, pt.sz * 0.4), 0, Math.PI * 2);
+              pCtx.fillStyle = `rgba(254, 71, 89, ${pt.op * fade * 0.3})`;
+              pCtx.fill();
             }
 
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, Math.max(0.5, p.size), 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(248, 248, 251, ${p.opacity})`;
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = `rgba(254, 71, 89, ${p.opacity * 0.6})`;
-            ctx.fill();
-            ctx.shadowBlur = 0;
+            pCtx.beginPath();
+            pCtx.arc(p.x, p.y, Math.max(0.4, p.sz), 0, Math.PI * 2);
+            pCtx.fillStyle = `rgba(237, 237, 239, ${p.op})`;
+            pCtx.fill();
           }
         }
 
-      } else if (currentScene === 3) {
-        const dx = p.targetX - p.x;
-        const dy = p.targetY - p.y;
+      } else if (curScene === 3) {
+        const dx = p.tX - p.x;
+        const dy = p.tY - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        const speed = 0.008 + (1 / (dist + 50)) * 2;
+        const spd = 0.006 + (1 / (dist + 60)) * 1.8;
 
-        p.x += dx * speed;
-        p.y += dy * speed;
-        p.x += Math.sin(elapsed * 1.5 + p.phase) * 0.4;
-        p.y += Math.cos(elapsed * 1.2 + p.phase * 1.3) * 0.3;
+        p.x += dx * spd;
+        p.y += dy * spd;
+        p.x += Math.sin(t * 1.3 + p.phase) * 0.35;
+        p.y += Math.cos(t * 1.1 + p.phase * 1.2) * 0.25;
 
-        p.coralTransition = Math.min(1, p.coralTransition + 0.015);
+        p.coralT = Math.min(1, p.coralT + 0.012);
 
-        const targetOpacity = dist < 80 ? Math.min(0.7, p.maxOpacity * 1.2) : p.maxOpacity * 1.2;
-        p.opacity += (targetOpacity - p.opacity) * 0.03;
+        const tgtOp = dist < 80 ? Math.min(0.6, p.maxOp * 1.1) : p.maxOp * 1.1;
+        p.op += (tgtOp - p.op) * 0.025;
 
-        const targetSize = dist < 80 ? p.baseSize * 1.3 : p.baseSize;
-        p.size += (targetSize - p.size) * 0.05;
+        const tgtSz = dist < 80 ? p.baseSz * 1.2 : p.baseSz;
+        p.sz += (tgtSz - p.sz) * 0.04;
 
-        // Trail for convergence
-        p.trail.push({ x: p.x, y: p.y, op: p.opacity, sz: p.size });
-        if (p.trail.length > p.trailLength) p.trail.shift();
+        p.trail.push({ x: p.x, y: p.y, op: p.op, sz: p.sz });
+        if (p.trail.length > p.trailLen) p.trail.shift();
 
-        for (let t = 0; t < p.trail.length - 1; t++) {
-          const pt = p.trail[t];
-          const trailFade = (t + 1) / p.trail.length;
-          const tOp = pt.op * trailFade * 0.25;
-          if (tOp > 0.005) {
-            ctx.beginPath();
-            ctx.arc(pt.x, pt.y, Math.max(0.3, pt.sz * trailFade * 0.5), 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(254, 71, 89, ${tOp})`;
-            ctx.fill();
+        for (let i = 0; i < p.trail.length - 1; i++) {
+          const pt = p.trail[i];
+          const fade = (i + 1) / p.trail.length;
+          const tOp = pt.op * fade * 0.2;
+          if (tOp > 0.004) {
+            pCtx.beginPath();
+            pCtx.arc(pt.x, pt.y, Math.max(0.3, pt.sz * fade * 0.4), 0, Math.PI * 2);
+            pCtx.fillStyle = `rgba(254, 71, 89, ${tOp})`;
+            pCtx.fill();
           }
         }
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, Math.max(0.5, p.size), 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(254, 71, 89, ${p.opacity})`;
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = `rgba(254, 71, 89, ${p.opacity * 0.5})`;
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        pCtx.beginPath();
+        pCtx.arc(p.x, p.y, Math.max(0.4, p.sz), 0, Math.PI * 2);
+        pCtx.fillStyle = `rgba(254, 71, 89, ${p.op})`;
+        pCtx.fill();
       }
     }
 
     // Scene 3 center glow
-    if (elapsed > 8 && currentScene === 3) {
-      scene3GlowOpacity = Math.min(0.08, scene3GlowOpacity + 0.0004);
-      const gradient = ctx.createRadialGradient(540, 960, 0, 540, 960, 280);
-      gradient.addColorStop(0, `rgba(254, 71, 89, ${scene3GlowOpacity})`);
-      gradient.addColorStop(0.5, `rgba(254, 71, 89, ${scene3GlowOpacity * 0.4})`);
-      gradient.addColorStop(1, 'rgba(254, 71, 89, 0)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(200, 620, 680, 680);
-    }
-
-    // Scene 3 accent bar particles
-    if (currentScene === 3 && elapsed > 8.2) {
-      const barEl = document.getElementById('s3Bar');
-      const barH = parseFloat(barEl.style.height) || 0;
-      if (barH > 0) {
-        const barCenterY = 960;
-        const barTop = barCenterY - barH / 2;
-        // Emit a few particles along the bar each frame
-        const particleChance = 0.15;
-        if (Math.random() < particleChance) {
-          const py = barTop + Math.random() * barH;
-          const px = 62;
-          const pSize = 1 + Math.random() * 2;
-          const pOp = 0.2 + Math.random() * 0.3;
-          ctx.beginPath();
-          ctx.arc(px, py, pSize, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(254, 71, 89, ${pOp})`;
-          ctx.shadowBlur = 15;
-          ctx.shadowColor = `rgba(254, 71, 89, ${pOp * 0.5})`;
-          ctx.fill();
-          ctx.shadowBlur = 0;
-        }
-      }
+    if (t > 8.2 && curScene === 3) {
+      s3Glow = Math.min(0.06, s3Glow + 0.0003);
+      const g = pCtx.createRadialGradient(540, 960, 0, 540, 960, 250);
+      g.addColorStop(0, `rgba(254, 71, 89, ${s3Glow})`);
+      g.addColorStop(0.5, `rgba(254, 71, 89, ${s3Glow * 0.35})`);
+      g.addColorStop(1, 'rgba(254, 71, 89, 0)');
+      pCtx.fillStyle = g;
+      pCtx.fillRect(240, 660, 600, 600);
     }
   }
 
   // ════════════════════════════════════════
-  // BLOOM POST-PROCESSING
+  // BLOOM
   // ════════════════════════════════════════
-  const bloomCanvas = document.getElementById('bloomCanvas');
-  const bloomCtx = bloomCanvas.getContext('2d');
-
-  function renderBloom() {
-    bloomCtx.clearRect(0, 0, 1080, 1920);
-    bloomCtx.drawImage(canvas, 0, 0);
-  }
+  const bloomCvs = document.getElementById('bloomCanvas');
+  const bloomCtx = bloomCvs.getContext('2d');
 
   // ════════════════════════════════════════
-  // MAIN RENDER LOOP
+  // MAIN LOOP
   // ════════════════════════════════════════
   function render() {
-    const elapsed = getElapsed();
+    const t = elapsed();
 
-    // Ambient dust
-    renderDust(elapsed);
+    renderDust(t);
 
-    // Main particles + waveform
-    ctx.clearRect(0, 0, 1080, 1920);
-    updateWaveform(elapsed);
-    updateParticles(elapsed);
+    pCtx.clearRect(0, 0, 1080, 1920);
+    drawWaveform(t);
+    drawParticles(t);
 
-    // Bloom pass — copies particle canvas blurred on top
-    renderBloom();
+    bloomCtx.clearRect(0, 0, 1080, 1920);
+    bloomCtx.drawImage(pCvs, 0, 0);
 
-    if (elapsed < 12) {
-      requestAnimationFrame(render);
-    }
+    if (t < 12) requestAnimationFrame(render);
   }
 
   requestAnimationFrame(render);
