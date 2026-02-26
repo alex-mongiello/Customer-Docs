@@ -17,7 +17,7 @@
     position: relative;
   }
 
-  /* Background gradient */
+  /* ── BACKGROUND LAYERS ── */
   .bg {
     position: absolute;
     inset: 0;
@@ -25,21 +25,64 @@
     z-index: 0;
   }
 
-  /* Warm radial glow */
-  .bg-glow {
+  /* Multiple animated light orbs for living background */
+  .bg-orb {
     position: absolute;
-    width: 900px;
-    height: 900px;
-    bottom: 200px;
-    right: -150px;
-    background: radial-gradient(circle, rgba(254,71,89,0.1) 0%, transparent 70%);
-    z-index: 0;
-    animation: glowDrift 8s ease-in-out infinite alternate;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .bg-orb-1 {
+    width: 700px; height: 700px;
+    bottom: 100px; right: -200px;
+    background: radial-gradient(circle, rgba(254,71,89,0.12) 0%, transparent 70%);
+    animation: orbFloat1 10s ease-in-out infinite alternate;
+  }
+  .bg-orb-2 {
+    width: 500px; height: 500px;
+    top: 200px; left: -100px;
+    background: radial-gradient(circle, rgba(88,40,180,0.15) 0%, transparent 70%);
+    animation: orbFloat2 12s ease-in-out infinite alternate;
+  }
+  .bg-orb-3 {
+    width: 600px; height: 600px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(254,71,89,0.06) 0%, transparent 70%);
+    animation: orbFloat3 8s ease-in-out infinite alternate;
+  }
+  .bg-orb-4 {
+    width: 400px; height: 400px;
+    bottom: 500px; left: 200px;
+    background: radial-gradient(circle, rgba(60,20,140,0.12) 0%, transparent 70%);
+    animation: orbFloat4 14s ease-in-out infinite alternate;
   }
 
-  @keyframes glowDrift {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(-60px, -40px); }
+  @keyframes orbFloat1 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-80px, -60px) scale(1.15); }
+  }
+  @keyframes orbFloat2 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(50px, 80px) scale(0.9); }
+  }
+  @keyframes orbFloat3 {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    100% { transform: translate(-45%, -55%) scale(1.2); opacity: 1; }
+  }
+  @keyframes orbFloat4 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(40px, -50px) scale(1.1); }
+  }
+
+  /* Vignette overlay */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(ellipse 70% 60% at 50% 45%, transparent 0%, rgba(6,1,18,0.5) 70%, rgba(6,1,18,0.85) 100%);
   }
 
   /* Film grain */
@@ -48,31 +91,66 @@
     inset: 0;
     z-index: 999;
     pointer-events: none;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-size: 256px 256px;
-    animation: grainShift 0.3s steps(3) infinite;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 512px 512px;
+    animation: grainShift 0.15s steps(4) infinite;
   }
 
   @keyframes grainShift {
     0% { transform: translate(0, 0); }
-    33% { transform: translate(-10px, 15px); }
-    66% { transform: translate(5px, -10px); }
-    100% { transform: translate(0, 0); }
+    25% { transform: translate(-12px, 18px); }
+    50% { transform: translate(8px, -14px); }
+    75% { transform: translate(-6px, -8px); }
+    100% { transform: translate(14px, 6px); }
   }
 
-  /* Canvas for particles + waveform */
+  /* ── CANVAS LAYERS ── */
+  #bgCanvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1080px; height: 1920px;
+    z-index: 3;
+    pointer-events: none;
+  }
   #particleCanvas {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 1080px;
-    height: 1920px;
+    top: 0; left: 0;
+    width: 1080px; height: 1920px;
     z-index: 5;
     pointer-events: none;
   }
+  #bloomCanvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1080px; height: 1920px;
+    z-index: 6;
+    pointer-events: none;
+    opacity: 0.35;
+    filter: blur(16px);
+    mix-blend-mode: screen;
+  }
 
-  /* Scene containers */
+  /* ── LIGHT LEAKS ── */
+  .light-leak {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    pointer-events: none;
+    opacity: 0;
+    overflow: hidden;
+  }
+  .light-leak-inner {
+    position: absolute;
+    width: 400px;
+    height: 1920px;
+    top: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(254,71,89,0.08) 30%, rgba(255,200,180,0.12) 50%, rgba(254,71,89,0.08) 70%, transparent 100%);
+    filter: blur(30px);
+    transform: translateX(-500px) skewX(-8deg);
+  }
+
+  /* ── SCENE CONTAINERS ── */
   .scene-1, .scene-2, .scene-3 {
     position: absolute;
     inset: 0;
@@ -113,7 +191,7 @@
     will-change: transform;
   }
 
-  /* Scene 1 typography */
+  /* ── SCENE 1 TYPOGRAPHY ── */
   .s1-we-asked .t {
     font-size: 88px;
     font-weight: 800;
@@ -156,11 +234,11 @@
     background: #fe4759;
     border-radius: 5px;
     margin-top: 12px;
-    box-shadow: 0 0 20px rgba(254,71,89,0.4);
+    box-shadow: 0 0 20px rgba(254,71,89,0.4), 0 0 60px rgba(254,71,89,0.15);
     will-change: width;
   }
 
-  /* Flash overlay */
+  /* ── FLASH OVERLAY ── */
   .flash-overlay {
     position: absolute;
     inset: 0;
@@ -170,7 +248,40 @@
     pointer-events: none;
   }
 
-  /* Scene 2 shake wrapper */
+  /* ── SHOCKWAVE ── */
+  .shockwave {
+    position: absolute;
+    z-index: 31;
+    pointer-events: none;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    border: 3px solid rgba(254,71,89,0.6);
+    box-shadow: 0 0 30px rgba(254,71,89,0.3), inset 0 0 30px rgba(254,71,89,0.1);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+
+  /* ── CHROMATIC ABERRATION / GLITCH ── */
+  .glitch-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 32;
+    pointer-events: none;
+    opacity: 0;
+    overflow: hidden;
+  }
+  .glitch-line {
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background: rgba(254,71,89,0.4);
+    filter: blur(1px);
+  }
+
+  /* ── SCENE 2 ── */
   .scene-2-anchor {
     position: absolute;
     inset: 0;
@@ -208,7 +319,7 @@
     will-change: transform, opacity;
   }
 
-  /* Scene 3 typography */
+  /* ── SCENE 3 TYPOGRAPHY ── */
   .s3-they-were .t {
     font-size: 88px;
     font-weight: 800;
@@ -252,7 +363,7 @@
     will-change: height;
   }
 
-  /* Outro fade to black */
+  /* ── OUTRO ── */
   .outro {
     position: absolute;
     inset: 0;
@@ -262,17 +373,19 @@
     pointer-events: none;
   }
 
+  /* ── KEYFRAMES ── */
   @keyframes shakeIt {
     0%   { transform: translate(0, 0) rotate(0deg); }
-    10%  { transform: translate(-18px, 8px) rotate(-0.8deg); }
-    20%  { transform: translate(15px, -12px) rotate(0.6deg); }
-    30%  { transform: translate(-10px, 6px) rotate(-0.4deg); }
-    40%  { transform: translate(8px, -5px) rotate(0.3deg); }
-    50%  { transform: translate(-5px, 3px) rotate(-0.2deg); }
-    60%  { transform: translate(4px, -3px) rotate(0.15deg); }
-    70%  { transform: translate(-3px, 2px) rotate(-0.1deg); }
-    80%  { transform: translate(2px, -1px) rotate(0.05deg); }
-    90%  { transform: translate(-1px, 1px) rotate(0deg); }
+    8%   { transform: translate(-18px, 8px) rotate(-0.8deg); }
+    16%  { transform: translate(15px, -12px) rotate(0.6deg); }
+    24%  { transform: translate(-12px, 6px) rotate(-0.5deg); }
+    32%  { transform: translate(10px, -8px) rotate(0.4deg); }
+    40%  { transform: translate(-8px, 5px) rotate(-0.3deg); }
+    50%  { transform: translate(5px, -3px) rotate(0.2deg); }
+    60%  { transform: translate(-4px, 3px) rotate(-0.15deg); }
+    70%  { transform: translate(3px, -2px) rotate(0.1deg); }
+    80%  { transform: translate(-2px, 1px) rotate(-0.05deg); }
+    90%  { transform: translate(1px, -1px) rotate(0deg); }
     100% { transform: translate(0, 0) rotate(0deg); }
   }
 
@@ -294,27 +407,86 @@
     12%  { opacity: 0.85; }
     100% { opacity: 0; }
   }
+
+  @keyframes shockwaveExpand {
+    0%   { width: 0; height: 0; opacity: 0.8; border-width: 3px; }
+    100% { width: 900px; height: 900px; opacity: 0; border-width: 1px; }
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.003); }
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { text-shadow: 0 0 40px rgba(254,71,89,0.2), 0 0 80px rgba(254,71,89,0.08); }
+    50%      { text-shadow: 0 0 60px rgba(254,71,89,0.35), 0 0 120px rgba(254,71,89,0.15); }
+  }
+
+  @keyframes glowPulseWhite {
+    0%, 100% { text-shadow: 0 0 30px rgba(248,248,251,0.15), 0 0 60px rgba(248,248,251,0.06); }
+    50%      { text-shadow: 0 0 50px rgba(248,248,251,0.25), 0 0 100px rgba(248,248,251,0.1); }
+  }
+
+  @keyframes barGlow {
+    0%, 100% { box-shadow: 0 0 30px rgba(254,71,89,0.25), 0 0 60px rgba(254,71,89,0.1); }
+    50%      { box-shadow: 0 0 45px rgba(254,71,89,0.4), 0 0 90px rgba(254,71,89,0.2); }
+  }
+
+  @keyframes lightLeakSweep {
+    0%   { transform: translateX(-500px) skewX(-8deg); }
+    100% { transform: translateX(1580px) skewX(-8deg); }
+  }
 </style>
 </head>
 <body>
 
+<!-- Background layers -->
 <div class="bg"></div>
-<div class="bg-glow"></div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
+<div class="bg-orb bg-orb-4"></div>
+<div class="vignette"></div>
 <div class="grain"></div>
+
+<!-- Canvas layers -->
+<canvas id="bgCanvas" width="1080" height="1920"></canvas>
 <canvas id="particleCanvas" width="1080" height="1920"></canvas>
+<canvas id="bloomCanvas" width="1080" height="1920"></canvas>
+
+<!-- Light leak overlays -->
+<div class="light-leak" id="lightLeak1">
+  <div class="light-leak-inner"></div>
+</div>
+<div class="light-leak" id="lightLeak2">
+  <div class="light-leak-inner"></div>
+</div>
 
 <!-- Scene 1 -->
 <div class="scene-1" id="scene1">
   <div class="s1 s1-we-asked"><span class="t">We asked</span></div>
   <div class="s1 s1-our"><span class="t">our</span></div>
-  <div class="s1 s1-customers"><span class="t">customers</span></div>
+  <div class="s1 s1-customers"><span class="t" id="customersText">customers</span></div>
   <div class="s1 s1-about"><span class="t">about</span></div>
-  <div class="s1 s1-peerbound"><span class="t">Peerbound</span></div>
+  <div class="s1 s1-peerbound"><span class="t" id="peerboundText">Peerbound</span></div>
   <div class="brand-line" id="brandLine"></div>
 </div>
 
 <!-- Flash overlay -->
 <div class="flash-overlay" id="flashOverlay"></div>
+
+<!-- Shockwave -->
+<div class="shockwave" id="shockwave"></div>
+
+<!-- Glitch lines -->
+<div class="glitch-layer" id="glitchLayer">
+  <div class="glitch-line" style="top: 38%"></div>
+  <div class="glitch-line" style="top: 42%; height: 2px; background: rgba(248,248,251,0.3);"></div>
+  <div class="glitch-line" style="top: 55%"></div>
+  <div class="glitch-line" style="top: 58%; height: 1px; background: rgba(100,200,255,0.3);"></div>
+  <div class="glitch-line" style="top: 63%"></div>
+</div>
 
 <!-- Scene 2 -->
 <div class="scene-2-anchor" id="scene2Anchor">
@@ -327,8 +499,8 @@
 <!-- Scene 3 -->
 <div class="scene-3" id="scene3">
   <div class="s3 s3-they-were"><span class="t">They were</span></div>
-  <div class="s3 s3-already"><span class="t">already</span></div>
-  <div class="s3 s3-talking"><span class="t">talking</span></div>
+  <div class="s3 s3-already"><span class="t" id="alreadyText">already</span></div>
+  <div class="s3 s3-talking"><span class="t" id="talkingText">talking</span></div>
   <div class="s3 s3-about-it"><span class="t">about it.</span></div>
   <div class="s3-bar" id="s3Bar"></div>
 </div>
@@ -338,27 +510,29 @@
 
 <script>
 (function() {
-  const ease = 'cubic-bezier(0.19, 1, 0.22, 1)';
+  const EASE = 'cubic-bezier(0.19, 1, 0.22, 1)';
   const startTime = performance.now();
 
-  // ── Utility: schedule an animation ──
   function at(delayS, fn) {
     setTimeout(fn, delayS * 1000);
   }
 
-  // ── Utility: animate a slide-up reveal ──
   function reveal(selector, delayS, durationS) {
     at(delayS, () => {
       const span = document.querySelector(selector + ' .t');
       if (!span) return;
-      span.style.transition = `transform ${durationS}s ${ease}`;
+      span.style.transition = `transform ${durationS}s ${EASE}`;
       span.style.transform = 'translateY(0)';
     });
   }
 
-  // ── SCENE 1 ──
+  // ════════════════════════════════════════
+  // SCENE 1
+  // ════════════════════════════════════════
   const scene1 = document.getElementById('scene1');
   const brandLine = document.getElementById('brandLine');
+  const customersText = document.getElementById('customersText');
+  const peerboundText = document.getElementById('peerboundText');
 
   at(0.1, () => { scene1.style.opacity = '1'; });
 
@@ -368,25 +542,51 @@
   reveal('.s1-about',      0.85, 0.5);
   reveal('.s1-peerbound',  1.00, 0.65);
 
+  // Keyword glow pulses after reveal
+  at(1.3, () => {
+    customersText.style.animation = 'glowPulse 3s ease-in-out infinite';
+  });
+  at(1.7, () => {
+    peerboundText.style.animation = 'glowPulseWhite 3s ease-in-out infinite';
+  });
+
+  // Breathing micro-animation on scene 1 after all reveals
+  at(1.8, () => {
+    scene1.style.animation = 'breathe 4s ease-in-out infinite';
+  });
+
   // Coral underline
   at(1.55, () => {
-    brandLine.style.transition = `width 0.8s ${ease}`;
+    brandLine.style.transition = `width 0.8s ${EASE}`;
     brandLine.style.width = '200px';
   });
+
+  // Light leak transition out of Scene 1
+  const lightLeak1 = document.getElementById('lightLeak1');
+  at(2.8, () => {
+    lightLeak1.style.opacity = '1';
+    lightLeak1.querySelector('.light-leak-inner').style.animation = 'lightLeakSweep 0.9s ease-in-out forwards';
+  });
+  at(3.7, () => { lightLeak1.style.opacity = '0'; });
 
   // Scene 1 fade out
   at(3.1, () => {
     scene1.style.transition = 'opacity 0.5s ease';
     scene1.style.opacity = '0';
+    scene1.style.animation = 'none';
   });
 
-  // ── SCENE 2 ──
+  // ════════════════════════════════════════
+  // SCENE 2
+  // ════════════════════════════════════════
   const flashOverlay = document.getElementById('flashOverlay');
   const scene2 = document.getElementById('scene2');
   const scene2Anchor = document.getElementById('scene2Anchor');
   const s2Just = document.getElementById('s2Just');
   const s2Kidding = document.getElementById('s2Kidding');
   const s2Period = document.getElementById('s2Period');
+  const shockwave = document.getElementById('shockwave');
+  const glitchLayer = document.getElementById('glitchLayer');
 
   // Flash
   at(3.65, () => {
@@ -399,11 +599,21 @@
     s2Just.style.animation = 'slamIn 0.35s cubic-bezier(0.22, 0.68, 0.31, 1.02) forwards';
   });
 
-  // "Kidding" slam + shake
+  // "Kidding" slam + shake + shockwave + glitch
   at(3.95, () => {
     s2Kidding.style.animation = 'slamIn 0.35s cubic-bezier(0.22, 0.68, 0.31, 1.02) forwards';
-    // Shake
-    scene2Anchor.style.animation = 'shakeIt 0.4s ease-out';
+    scene2Anchor.style.animation = 'shakeIt 0.5s ease-out';
+
+    // Shockwave ring
+    shockwave.style.animation = 'shockwaveExpand 0.6s ease-out forwards';
+
+    // Glitch flicker
+    glitchLayer.style.opacity = '1';
+    setTimeout(() => { glitchLayer.style.opacity = '0'; }, 60);
+    setTimeout(() => { glitchLayer.style.opacity = '0.7'; }, 100);
+    setTimeout(() => { glitchLayer.style.opacity = '0'; }, 150);
+    setTimeout(() => { glitchLayer.style.opacity = '0.4'; }, 200);
+    setTimeout(() => { glitchLayer.style.opacity = '0'; }, 240);
   });
 
   // Period bounce
@@ -411,15 +621,33 @@
     s2Period.style.animation = 'periodBounce 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
   });
 
+  // Breathing on Scene 2 hold
+  at(4.7, () => {
+    scene2.style.animation = 'breathe 3s ease-in-out infinite';
+  });
+
   // Scene 2 fade out
   at(5.65, () => {
     scene2.style.transition = 'opacity 0.35s ease';
     scene2.style.opacity = '0';
+    scene2.style.animation = 'none';
   });
 
-  // ── SCENE 3 ──
+  // Light leak into Scene 3
+  const lightLeak2 = document.getElementById('lightLeak2');
+  at(5.7, () => {
+    lightLeak2.style.opacity = '1';
+    lightLeak2.querySelector('.light-leak-inner').style.animation = 'lightLeakSweep 1s ease-in-out forwards';
+  });
+  at(6.7, () => { lightLeak2.style.opacity = '0'; });
+
+  // ════════════════════════════════════════
+  // SCENE 3
+  // ════════════════════════════════════════
   const scene3 = document.getElementById('scene3');
   const s3Bar = document.getElementById('s3Bar');
+  const alreadyText = document.getElementById('alreadyText');
+  const talkingText = document.getElementById('talkingText');
 
   at(6.05, () => {
     scene3.style.transition = 'opacity 0.5s ease';
@@ -431,22 +659,86 @@
   reveal('.s3-talking',   6.80, 0.65);
   reveal('.s3-about-it',  7.10, 0.6);
 
-  // Left accent bar
-  at(7.35, () => {
-    s3Bar.style.transition = `height 0.8s ${ease}`;
-    s3Bar.style.height = '360px';
+  // Keyword glow pulses in Scene 3
+  at(7.15, () => {
+    alreadyText.style.animation = 'glowPulse 3s ease-in-out infinite';
+  });
+  at(7.5, () => {
+    talkingText.style.animation = 'glowPulseWhite 3s ease-in-out infinite';
   });
 
-  // ── OUTRO ──
+  // Breathing on Scene 3
+  at(7.8, () => {
+    scene3.style.animation = 'breathe 4s ease-in-out infinite';
+  });
+
+  // Left accent bar
+  at(7.35, () => {
+    s3Bar.style.transition = `height 0.8s ${EASE}`;
+    s3Bar.style.height = '360px';
+  });
+  // Bar glow pulse after it grows
+  at(8.2, () => {
+    s3Bar.style.animation = 'barGlow 2.5s ease-in-out infinite';
+  });
+
+  // ════════════════════════════════════════
+  // OUTRO
+  // ════════════════════════════════════════
   const outro = document.getElementById('outro');
   at(9.6, () => {
     outro.style.transition = 'opacity 0.9s ease';
     outro.style.opacity = '1';
   });
 
-  // ══════════════════════════════════════════
-  // PARTICLE & WAVEFORM CANVAS SYSTEM
-  // ══════════════════════════════════════════
+  // ════════════════════════════════════════
+  // CANVAS: AMBIENT BOKEH DUST (bgCanvas)
+  // ════════════════════════════════════════
+  const bgCanvas = document.getElementById('bgCanvas');
+  const bgCtx = bgCanvas.getContext('2d');
+
+  const DUST_COUNT = 120;
+  const dustParticles = [];
+  for (let i = 0; i < DUST_COUNT; i++) {
+    dustParticles.push({
+      x: Math.random() * 1080,
+      y: Math.random() * 1920,
+      size: 1 + Math.random() * 3,
+      opacity: 0.03 + Math.random() * 0.12,
+      speedX: (Math.random() - 0.5) * 0.15,
+      speedY: -(0.05 + Math.random() * 0.2),
+      phase: Math.random() * Math.PI * 2,
+      phaseSpeed: 0.3 + Math.random() * 0.5
+    });
+  }
+
+  function renderDust(elapsed) {
+    bgCtx.clearRect(0, 0, 1080, 1920);
+    for (const d of dustParticles) {
+      d.x += d.speedX + Math.sin(elapsed * d.phaseSpeed + d.phase) * 0.08;
+      d.y += d.speedY;
+
+      // Wrap around
+      if (d.y < -10) { d.y = 1930; d.x = Math.random() * 1080; }
+      if (d.x < -10) d.x = 1090;
+      if (d.x > 1090) d.x = -10;
+
+      const flicker = 0.7 + 0.3 * Math.sin(elapsed * 1.5 + d.phase);
+      const op = d.opacity * flicker;
+
+      bgCtx.beginPath();
+      bgCtx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
+      bgCtx.fillStyle = `rgba(248, 248, 251, ${op})`;
+      bgCtx.shadowBlur = d.size * 4;
+      bgCtx.shadowColor = `rgba(248, 248, 251, ${op * 0.4})`;
+      bgCtx.fill();
+    }
+    bgCtx.shadowBlur = 0;
+  }
+
+  // ════════════════════════════════════════
+  // CANVAS: PARTICLES + WAVEFORM (particleCanvas)
+  // ════════════════════════════════════════
   const canvas = document.getElementById('particleCanvas');
   const ctx = canvas.getContext('2d');
 
@@ -458,7 +750,6 @@
   const WAVEFORM_SPAN = 1080 - WAVEFORM_PADDING * 2;
   const WAVEFORM_BAR_GAP = WAVEFORM_SPAN / WAVEFORM_BAR_COUNT;
 
-  // Waveform state
   const waveformBars = [];
   for (let i = 0; i < WAVEFORM_BAR_COUNT; i++) {
     const normalizedPos = i / (WAVEFORM_BAR_COUNT - 1);
@@ -472,26 +763,30 @@
     });
   }
 
-  // Particle config
-  const PARTICLE_COUNT = 60;
+  // Particles — doubled to 120
+  const PARTICLE_COUNT = 120;
   let currentScene = 1;
-  let elapsedTime = 0;
-
-  // Particles
   const particles = [];
   for (let i = 0; i < PARTICLE_COUNT; i++) {
-    const baseSize = 2 + Math.random() * 4;
+    const baseSize = 1.5 + Math.random() * 4.5;
+    // Assign to a random waveform bar for spawning
+    const barIndex = Math.floor(Math.random() * WAVEFORM_BAR_COUNT);
+    const barX = waveformBars[barIndex].x;
     particles.push({
-      x: 100 + Math.random() * 880,
-      y: 1382 + Math.random() * 80,
+      x: barX + (Math.random() - 0.5) * 8,
+      y: WAVEFORM_Y - (Math.random() * 30),
       baseSize: baseSize,
       size: baseSize,
-      maxOpacity: 0.15 + Math.random() * 0.35,
+      maxOpacity: 0.12 + Math.random() * 0.45,
       opacity: 0,
-      speedY: -(0.15 + Math.random() * 0.35),
+      speedY: -(0.2 + Math.random() * 0.45),
       life: Math.random(),
-      lifeSpeed: 0.003 + Math.random() * 0.004,
+      lifeSpeed: 0.002 + Math.random() * 0.004,
       phase: Math.random() * Math.PI * 2,
+      barIndex: barIndex,
+      // Trail: store last few positions
+      trail: [],
+      trailLength: 2 + Math.floor(Math.random() * 4),
       // Scene 2 scatter
       scatterVX: 0,
       scatterVY: 0,
@@ -504,7 +799,6 @@
     });
   }
 
-  // Scene tracking
   let scene2Entered = false;
   let scene3Entered = false;
   let scene3GlowOpacity = 0;
@@ -513,27 +807,22 @@
     return (performance.now() - startTime) / 1000;
   }
 
-  function updateWaveform(elapsed, dt) {
-    // Waveform visibility
+  function updateWaveform(elapsed) {
     let waveformOpacity = 0;
     let coralMode = false;
 
-    // Scene 1: fade in 0.2–1.0s, fade out 2.6–3.1s
     if (elapsed < 3.1) {
       if (elapsed < 0.2) waveformOpacity = 0;
       else if (elapsed < 1.0) waveformOpacity = (elapsed - 0.2) / 0.8;
       else if (elapsed < 2.6) waveformOpacity = 1;
       else waveformOpacity = 1 - (elapsed - 2.6) / 0.5;
-    }
-    // Scene 3: fade in after 7.5s over 1s
-    else if (elapsed > 7.5) {
+    } else if (elapsed > 7.5) {
       waveformOpacity = Math.min(1, (elapsed - 7.5) / 1.0);
       coralMode = true;
     }
 
     if (waveformOpacity <= 0) return;
 
-    // Update bar heights
     for (let i = 0; i < waveformBars.length; i++) {
       const bar = waveformBars[i];
       if (elapsed - bar.lastTargetChange > 0.3) {
@@ -543,7 +832,6 @@
       bar.currentHeight += (bar.targetHeight - bar.currentHeight) * 0.08;
     }
 
-    // Draw bars
     for (let i = 0; i < waveformBars.length; i++) {
       const bar = waveformBars[i];
       const h = bar.currentHeight;
@@ -552,14 +840,14 @@
 
       if (coralMode) {
         ctx.fillStyle = `rgba(254, 71, 89, ${waveformOpacity * 0.7})`;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = 'rgba(254, 71, 89, 0.5)';
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = `rgba(254, 71, 89, ${waveformOpacity * 0.5})`;
       } else {
         ctx.fillStyle = `rgba(248, 248, 251, ${waveformOpacity * 0.35})`;
-        ctx.shadowBlur = 0;
+        ctx.shadowBlur = 4;
+        ctx.shadowColor = `rgba(248, 248, 251, ${waveformOpacity * 0.15})`;
       }
 
-      // Rounded rect
       const r = 3;
       ctx.beginPath();
       ctx.moveTo(x + r, y);
@@ -573,55 +861,53 @@
       ctx.quadraticCurveTo(x, y, x + r, y);
       ctx.closePath();
       ctx.fill();
-      ctx.shadowBlur = 0;
     }
+    ctx.shadowBlur = 0;
   }
 
-  function updateParticles(elapsed, dt) {
-    // Detect scene transitions
+  function updateParticles(elapsed) {
     if (elapsed >= 3.65 && !scene2Entered) {
       scene2Entered = true;
       currentScene = 2;
-      // Scatter particles
       for (const p of particles) {
         const angle = Math.random() * Math.PI * 2;
         const force = 8 + Math.random() * 15;
         p.scatterVX = Math.cos(angle) * force;
         p.scatterVY = Math.sin(angle) * force;
         p.scattered = true;
+        p.trail = [];
       }
     }
 
     if (elapsed >= 6.05 && !scene3Entered) {
       scene3Entered = true;
       currentScene = 3;
-      // Reset particles for convergence
       for (const p of particles) {
         p.scattered = false;
         p.converging = true;
         p.opacity = 0;
         p.size = p.baseSize;
-        // Scatter them around
         p.x = Math.random() * 1080;
         p.y = Math.random() * 1920;
         p.coralTransition = 0;
+        p.trail = [];
       }
     }
 
     for (const p of particles) {
       if (currentScene === 1) {
-        // Drift upward, fade cycle
         p.life += p.lifeSpeed;
         if (p.life > 1) {
-          // Reset
+          // Reset — spawn from waveform bar tip
           p.life = 0;
-          p.x = 100 + Math.random() * 880;
-          p.y = 1382 + Math.random() * 80;
+          const bar = waveformBars[p.barIndex];
+          p.x = bar.x + (Math.random() - 0.5) * 8;
+          p.y = WAVEFORM_Y - bar.currentHeight / 2 - Math.random() * 5;
           p.phase = Math.random() * Math.PI * 2;
+          p.trail = [];
         }
 
         const lifeRatio = p.life;
-        // Opacity: fade in first 15%, hold, fade out last 40%
         let opacityMult;
         if (lifeRatio < 0.15) opacityMult = lifeRatio / 0.15;
         else if (lifeRatio > 0.6) opacityMult = 1 - (lifeRatio - 0.6) / 0.4;
@@ -632,7 +918,24 @@
         p.y += p.speedY;
         p.x += Math.sin(elapsed * 2 + p.phase) * 0.3;
 
-        // Draw (white)
+        // Store trail
+        p.trail.push({ x: p.x, y: p.y, op: p.opacity, sz: p.size });
+        if (p.trail.length > p.trailLength) p.trail.shift();
+
+        // Draw trail
+        for (let t = 0; t < p.trail.length - 1; t++) {
+          const pt = p.trail[t];
+          const trailFade = (t + 1) / p.trail.length;
+          const tOp = pt.op * trailFade * 0.3;
+          if (tOp > 0.005) {
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, Math.max(0.3, pt.sz * trailFade * 0.6), 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(248, 248, 251, ${tOp})`;
+            ctx.fill();
+          }
+        }
+
+        // Draw main particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, Math.max(0.5, p.size), 0, Math.PI * 2);
         ctx.fillStyle = `rgba(248, 248, 251, ${p.opacity})`;
@@ -642,7 +945,6 @@
         ctx.shadowBlur = 0;
 
       } else if (currentScene === 2) {
-        // Scatter and dissolve
         if (p.scattered) {
           p.x += p.scatterVX;
           p.y += p.scatterVY;
@@ -652,15 +954,31 @@
           p.size *= 0.99;
 
           if (p.opacity > 0.01) {
+            // Draw scatter trail
+            p.trail.push({ x: p.x, y: p.y, op: p.opacity, sz: p.size });
+            if (p.trail.length > 5) p.trail.shift();
+
+            for (let t = 0; t < p.trail.length - 1; t++) {
+              const pt = p.trail[t];
+              const trailFade = (t + 1) / p.trail.length;
+              const tOp = pt.op * trailFade * 0.4;
+              ctx.beginPath();
+              ctx.arc(pt.x, pt.y, Math.max(0.3, pt.sz * 0.5), 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(254, 71, 89, ${tOp})`;
+              ctx.fill();
+            }
+
             ctx.beginPath();
             ctx.arc(p.x, p.y, Math.max(0.5, p.size), 0, Math.PI * 2);
             ctx.fillStyle = `rgba(248, 248, 251, ${p.opacity})`;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = `rgba(254, 71, 89, ${p.opacity * 0.6})`;
             ctx.fill();
+            ctx.shadowBlur = 0;
           }
         }
 
       } else if (currentScene === 3) {
-        // Converge toward target
         const dx = p.targetX - p.x;
         const dy = p.targetY - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -668,23 +986,33 @@
 
         p.x += dx * speed;
         p.y += dy * speed;
-
-        // Organic oscillation
         p.x += Math.sin(elapsed * 1.5 + p.phase) * 0.4;
         p.y += Math.cos(elapsed * 1.2 + p.phase * 1.3) * 0.3;
 
-        // Coral transition
         p.coralTransition = Math.min(1, p.coralTransition + 0.015);
 
-        // Opacity increases
         const targetOpacity = dist < 80 ? Math.min(0.7, p.maxOpacity * 1.2) : p.maxOpacity * 1.2;
         p.opacity += (targetOpacity - p.opacity) * 0.03;
 
-        // Size grows when close
         const targetSize = dist < 80 ? p.baseSize * 1.3 : p.baseSize;
         p.size += (targetSize - p.size) * 0.05;
 
-        // Draw (coral)
+        // Trail for convergence
+        p.trail.push({ x: p.x, y: p.y, op: p.opacity, sz: p.size });
+        if (p.trail.length > p.trailLength) p.trail.shift();
+
+        for (let t = 0; t < p.trail.length - 1; t++) {
+          const pt = p.trail[t];
+          const trailFade = (t + 1) / p.trail.length;
+          const tOp = pt.op * trailFade * 0.25;
+          if (tOp > 0.005) {
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, Math.max(0.3, pt.sz * trailFade * 0.5), 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(254, 71, 89, ${tOp})`;
+            ctx.fill();
+          }
+        }
+
         ctx.beginPath();
         ctx.arc(p.x, p.y, Math.max(0.5, p.size), 0, Math.PI * 2);
         ctx.fillStyle = `rgba(254, 71, 89, ${p.opacity})`;
@@ -695,32 +1023,71 @@
       }
     }
 
-    // Scene 3 center glow after 8s
+    // Scene 3 center glow
     if (elapsed > 8 && currentScene === 3) {
-      scene3GlowOpacity = Math.min(0.06, scene3GlowOpacity + 0.0003);
-      const gradient = ctx.createRadialGradient(540, 960, 0, 540, 960, 250);
+      scene3GlowOpacity = Math.min(0.08, scene3GlowOpacity + 0.0004);
+      const gradient = ctx.createRadialGradient(540, 960, 0, 540, 960, 280);
       gradient.addColorStop(0, `rgba(254, 71, 89, ${scene3GlowOpacity})`);
+      gradient.addColorStop(0.5, `rgba(254, 71, 89, ${scene3GlowOpacity * 0.4})`);
       gradient.addColorStop(1, 'rgba(254, 71, 89, 0)');
       ctx.fillStyle = gradient;
-      ctx.fillRect(290, 710, 500, 500);
+      ctx.fillRect(200, 620, 680, 680);
+    }
+
+    // Scene 3 accent bar particles
+    if (currentScene === 3 && elapsed > 8.2) {
+      const barEl = document.getElementById('s3Bar');
+      const barH = parseFloat(barEl.style.height) || 0;
+      if (barH > 0) {
+        const barCenterY = 960;
+        const barTop = barCenterY - barH / 2;
+        // Emit a few particles along the bar each frame
+        const particleChance = 0.15;
+        if (Math.random() < particleChance) {
+          const py = barTop + Math.random() * barH;
+          const px = 62;
+          const pSize = 1 + Math.random() * 2;
+          const pOp = 0.2 + Math.random() * 0.3;
+          ctx.beginPath();
+          ctx.arc(px, py, pSize, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(254, 71, 89, ${pOp})`;
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = `rgba(254, 71, 89, ${pOp * 0.5})`;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      }
     }
   }
 
-  // ── Main render loop ──
-  let lastFrameTime = performance.now();
+  // ════════════════════════════════════════
+  // BLOOM POST-PROCESSING
+  // ════════════════════════════════════════
+  const bloomCanvas = document.getElementById('bloomCanvas');
+  const bloomCtx = bloomCanvas.getContext('2d');
 
+  function renderBloom() {
+    bloomCtx.clearRect(0, 0, 1080, 1920);
+    bloomCtx.drawImage(canvas, 0, 0);
+  }
+
+  // ════════════════════════════════════════
+  // MAIN RENDER LOOP
+  // ════════════════════════════════════════
   function render() {
-    const now = performance.now();
-    const dt = (now - lastFrameTime) / 1000;
-    lastFrameTime = now;
     const elapsed = getElapsed();
 
+    // Ambient dust
+    renderDust(elapsed);
+
+    // Main particles + waveform
     ctx.clearRect(0, 0, 1080, 1920);
+    updateWaveform(elapsed);
+    updateParticles(elapsed);
 
-    updateWaveform(elapsed, dt);
-    updateParticles(elapsed, dt);
+    // Bloom pass — copies particle canvas blurred on top
+    renderBloom();
 
-    // Stop after fade to black is complete
     if (elapsed < 12) {
       requestAnimationFrame(render);
     }
