@@ -1,6 +1,7 @@
 import React from 'react';
 import {Composition} from 'remotion';
 import {NotificationFlood} from './examples/code/NotificationFlood';
+import {ProcessSessionData} from './examples/code/ProcessSessionData';
 
 export const Root: React.FC = () => {
   return (
@@ -8,6 +9,14 @@ export const Root: React.FC = () => {
       <Composition
         id="NotificationFlood"
         component={NotificationFlood}
+        durationInFrames={540}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="ProcessSessionData"
+        component={ProcessSessionData}
         durationInFrames={540}
         fps={30}
         width={1920}

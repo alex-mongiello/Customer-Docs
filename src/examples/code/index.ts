@@ -5,3 +5,4 @@
  */
 
 export {NotificationFlood} from './NotificationFlood';
+export {ProcessSessionData} from './ProcessSessionData';

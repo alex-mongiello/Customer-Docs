@@ -5,7 +5,8 @@
   "scripts": {
     "start": "npx remotion studio",
     "build": "npx remotion render src/index.ts",
-    "render:notification-flood": "npx remotion render src/index.ts NotificationFlood out/notification-flood.mp4"
+    "render:notification-flood": "npx remotion render src/index.ts NotificationFlood out/notification-flood.mp4",
+    "render:process-session-data": "npx remotion render src/index.ts ProcessSessionData out/process-session-data.mp4"
   },
   "dependencies": {
     "@remotion/cli": "4.0.242",
