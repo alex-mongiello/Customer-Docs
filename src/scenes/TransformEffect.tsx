@@ -1,85 +1,111 @@
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame, interpolate, spring } from 'remotion';
-import { ProofCard, CardType } from '../components/ProofCard';
-import { CARD_POSITIONS } from './ProofCards';
-import { DEEP_INDIGO, MUTED_GRAY, CORAL_RED, FONT_PRIMARY, SHADOW_CARD, SPRING_SMOOTH } from '../theme';
+import { DEEP_INDIGO, MUTED_GRAY, CORAL_RED, FONT_PRIMARY, SHADOW_CARD_HOVER, SPRING_SMOOTH } from '../theme';
 
-const CENTER_X = (1920 - 340) / 2;
-const CENTER_Y = (1080 - 200) / 2;
+const CENTER_X = (1920 - 420) / 2;
+const CENTER_Y = (1080 - 240) / 2;
 
 interface LabelConfig {
   title: string;
   description: string;
+  icon: string;
   startFrame: number;
   endFrame: number;
 }
 
 const LABELS: LabelConfig[] = [
-  { title: 'Customer Quotes', description: 'Surface authentic voices from your customers', startFrame: 35, endFrame: 55 },
-  { title: 'Case Studies', description: 'Draft compelling stories automatically', startFrame: 55, endFrame: 75 },
-  { title: 'G2 Reviews', description: 'Generate and manage review campaigns', startFrame: 75, endFrame: 95 },
-  { title: 'Impact Metrics', description: 'Quantify the impact of customer proof', startFrame: 95, endFrame: 115 },
-  { title: 'Sales Proof', description: 'Arm your reps with the right proof, instantly', startFrame: 115, endFrame: 120 },
+  { title: 'Customer Quotes', description: 'Surface authentic voices from your customers', icon: '\u201C', startFrame: 30, endFrame: 50 },
+  { title: 'Case Studies', description: 'Draft compelling stories automatically', icon: '\uD83D\uDCD6', startFrame: 50, endFrame: 70 },
+  { title: 'G2 Reviews', description: 'Generate and manage review campaigns', icon: '\u2605', startFrame: 70, endFrame: 90 },
+  { title: 'Impact Metrics', description: 'Quantify the impact of customer proof', icon: '\uD83D\uDCC8', startFrame: 90, endFrame: 110 },
+  { title: 'Sales Proof', description: 'Arm your reps with the right proof, instantly', icon: '\uD83C\uDFAF', startFrame: 110, endFrame: 120 },
 ];
+
+const PeerboundShield: React.FC = () => (
+  <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+    <defs>
+      <linearGradient id="shieldGrad" x1="0" y1="0" x2="48" y2="48">
+        <stop offset="0%" stopColor={CORAL_RED} />
+        <stop offset="100%" stopColor="#E03347" />
+      </linearGradient>
+    </defs>
+    <path d="M24 4L6 12V22C6 33.1 13.8 43.4 24 46C34.2 43.4 42 33.1 42 22V12L24 4Z" fill="url(#shieldGrad)" opacity={0.12} />
+    <path d="M24 8L10 14V22C10 31.2 16.2 39.8 24 42C31.8 39.8 38 31.2 38 22V14L24 8Z" stroke="url(#shieldGrad)" strokeWidth="1.5" fill="none" />
+    <path d="M18 24L22 28L30 20" stroke={CORAL_RED} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
 
 export const TransformEffect: React.FC = () => {
   const frame = useCurrentFrame();
 
-  // Phase 1: Cards converge (frames 0-30)
+  // Phase 1: Convergence flash (frames 0-25)
   const convergeProgress = spring({ frame, fps: 30, config: SPRING_SMOOTH });
+  const flashOpacity = interpolate(frame, [15, 20, 25], [0, 0.4, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
-  // Phase 2: Label cycling (frames 35+)
-  const showLabels = frame >= 35;
+  // Card entrance
+  const cardScale = interpolate(convergeProgress, [0, 1], [0.5, 1]);
+  const cardOpacity = interpolate(convergeProgress, [0, 1], [0, 1]);
+
+  // Subtle breathing
+  const breathe = frame > 30 ? Math.sin(frame * 0.05) * 1.5 : 0;
 
   return (
     <AbsoluteFill>
-      {/* Converging cards */}
-      {frame < 35 && CARD_POSITIONS.map((card, i) => {
-        const targetX = CENTER_X;
-        const targetY = CENTER_Y;
-        const currentX = interpolate(convergeProgress, [0, 1], [card.x, targetX], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-        const currentY = interpolate(convergeProgress, [0, 1], [card.y, targetY], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-        const opacity = i === 0
-          ? 1
-          : interpolate(convergeProgress, [0, 0.7, 1], [1, 0.5, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-        const scale = interpolate(convergeProgress, [0, 0.5, 1], [1, 1.05, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+      {/* Flash on convergence */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: `radial-gradient(circle at 50% 50%, rgba(254, 71, 89, ${flashOpacity}) 0%, transparent 60%)`,
+          pointerEvents: 'none',
+        }}
+      />
 
-        return (
-          <div
-            key={card.type}
-            style={{
-              position: 'absolute',
-              left: currentX,
-              top: currentY,
-              opacity,
-              transform: `scale(${scale})`,
-            }}
-          >
-            <ProofCard type={card.type} />
-          </div>
-        );
-      })}
-
-      {/* Centered card with cycling labels */}
-      {showLabels && (
+      {/* Centered premium card */}
+      <div
+        style={{
+          position: 'absolute',
+          left: CENTER_X,
+          top: CENTER_Y,
+          width: 420,
+          height: 240,
+          transform: `scale(${cardScale}) translateY(${breathe}px)`,
+          opacity: cardOpacity,
+        }}
+      >
         <div
           style={{
-            position: 'absolute',
-            left: CENTER_X,
-            top: CENTER_Y,
-            width: 340,
-            height: 200,
+            width: '100%',
+            height: '100%',
             backgroundColor: '#FFFFFF',
-            borderRadius: 16,
-            boxShadow: SHADOW_CARD,
-            borderLeft: `3px solid ${CORAL_RED}`,
+            borderRadius: 20,
+            boxShadow: SHADOW_CARD_HOVER,
+            overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: 12,
+            position: 'relative',
           }}
         >
+          {/* Top gradient bar */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 3,
+              background: `linear-gradient(90deg, ${CORAL_RED} 0%, #E03347 50%, ${CORAL_RED} 100%)`,
+            }}
+          />
+
+          {/* Shield icon */}
+          <div style={{ marginBottom: 12 }}>
+            <PeerboundShield />
+          </div>
+
+          {/* Cycling labels */}
           {LABELS.map((label, i) => {
             const isLast = i === LABELS.length - 1;
             const fadeInStart = label.startFrame;
@@ -91,9 +117,11 @@ export const TransformEffect: React.FC = () => {
             const outOpacity = isLast ? 1 : interpolate(frame, [fadeOutStart, fadeOutEnd], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
             const opacity = Math.min(inOpacity, outOpacity);
 
-            const inY = interpolate(frame, [fadeInStart, fadeInEnd], [15, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-            const outY = isLast ? 0 : interpolate(frame, [fadeOutStart, fadeOutEnd], [0, -15], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+            const inY = interpolate(frame, [fadeInStart, fadeInEnd], [12, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+            const outY = isLast ? 0 : interpolate(frame, [fadeOutStart, fadeOutEnd], [0, -12], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
             const translateY = frame < fadeOutStart ? inY : outY;
+
+            const inScale = interpolate(frame, [fadeInStart, fadeInEnd], [0.95, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
             if (opacity <= 0) return null;
 
@@ -105,22 +133,35 @@ export const TransformEffect: React.FC = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 8,
+                  gap: 6,
                   opacity,
-                  transform: `translateY(${translateY}px)`,
+                  transform: `translateY(${translateY + 24}px) scale(${inScale})`,
                 }}
               >
-                <span style={{ fontFamily: FONT_PRIMARY, fontSize: 22, fontWeight: 600, color: DEEP_INDIGO }}>
-                  {label.title}
+                <span style={{
+                  fontFamily: FONT_PRIMARY,
+                  fontSize: 22,
+                  fontWeight: 700,
+                  color: DEEP_INDIGO,
+                  letterSpacing: -0.3,
+                }}>
+                  {label.icon} {label.title}
                 </span>
-                <span style={{ fontFamily: FONT_PRIMARY, fontSize: 13, color: MUTED_GRAY, textAlign: 'center', maxWidth: 280 }}>
+                <span style={{
+                  fontFamily: FONT_PRIMARY,
+                  fontSize: 14,
+                  color: MUTED_GRAY,
+                  textAlign: 'center',
+                  maxWidth: 320,
+                  lineHeight: 1.4,
+                }}>
                   {label.description}
                 </span>
               </div>
             );
           })}
         </div>
-      )}
+      </div>
     </AbsoluteFill>
   );
 };

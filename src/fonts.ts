@@ -1,5 +1,8 @@
-// Font loading for Peerbound video
-// Using system font stacks as primary fallback.
-// The FONT_PRIMARY and FONT_MONO from theme.ts will resolve to the best available system fonts.
+import { loadFont as loadInter } from '@remotion/google-fonts/Inter';
+import { loadFont as loadJetBrainsMono } from '@remotion/google-fonts/JetBrainsMono';
 
-export const fontsLoaded = true;
+const inter = loadInter();
+const jetBrainsMono = loadJetBrainsMono();
+
+export const INTER = inter.fontFamily;
+export const JETBRAINS = jetBrainsMono.fontFamily;
