@@ -128,7 +128,7 @@ export const PersonnelCard: React.FC<PersonnelCardProps> = ({
 				}}
 			>
 				<Img
-					src={staticFile(`assets/${photoFile}`)}
+					src={staticFile(photoFile)}
 					style={{
 						width: '100%',
 						height: '100%',
@@ -279,7 +279,7 @@ export const PersonnelCard: React.FC<PersonnelCardProps> = ({
 // Chris Dalton card — export as a ready-to-render composition wrapper
 export const ChrisDaltonCard: React.FC = () => (
 	<PersonnelCard
-		photoFile="chris-dalton.jpg"
+		photoFile="Chris.jpg"
 		category="CAREER MOVE"
 		name="CHRIS DALTON"
 		role="Principal, Customer Marketing"
