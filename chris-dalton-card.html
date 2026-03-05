@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1080" />
+  <title>Chris Dalton — Career Move</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1080px;
+      height: 1080px;
+      overflow: hidden;
+      background: #160340;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .card {
+      position: relative;
+      width: 1080px;
+      height: 1080px;
+      background: #160340;
+      overflow: hidden;
+    }
+
+    /* Dot grid background */
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(248,248,251,0.18) 1.5px, transparent 1.5px);
+      background-size: 44px 44px;
+      z-index: 0;
+    }
+
+    /* Top banner */
+    .banner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 112px;
+      background: linear-gradient(135deg, #FE4759 0%, #C02038 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 44px;
+      z-index: 10;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    .banner-category {
+      color: #F8F8FB;
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    .banner-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .banner-logo span {
+      color: #F8F8FB;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    /* Headshot area */
+    .headshot {
+      position: absolute;
+      top: 112px;
+      left: 0;
+      right: 0;
+      bottom: 260px;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .headshot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    /* Gradient fade at bottom of photo */
+    .headshot::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(to bottom, transparent 0%, #160340 100%);
+    }
+
+    /* Company transition badges */
+    .companies {
+      position: absolute;
+      bottom: 28px;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      z-index: 5;
+    }
+
+    .company-badge {
+      background: rgba(255,255,255,0.92);
+      border-radius: 12px;
+      padding: 10px 26px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: 0.02em;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    .arrow {
+      color: #F8F8FB;
+      font-size: 32px;
+      font-weight: 300;
+      opacity: 0.9;
+    }
+
+    /* Name plate */
+    .nameplate {
+      position: absolute;
+      bottom: 150px;
+      left: 0;
+      right: 0;
+      height: 110px;
+      background: #241956;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      z-index: 10;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .name {
+      color: #F8F8FB;
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .role {
+      color: rgba(248,248,251,0.55);
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    /* Chyron */
+    .chyron {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 150px;
+      background: linear-gradient(135deg, #FE4759 0%, #C02038 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.3);
+    }
+
+    .chyron-word {
+      color: #F8F8FB;
+      font-size: 90px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+
+    <!-- Top banner -->
+    <div class="banner">
+      <span class="banner-category">Career Move</span>
+      <div class="banner-logo">
+        <svg width="38" height="38" viewBox="0 0 40 40" fill="none">
+          <polygon points="20,2 38,36 2,36" fill="#F8F8FB" />
+        </svg>
+        <span>Peerbound</span>
+      </div>
+    </div>
+
+    <!-- Headshot -->
+    <div class="headshot">
+      <img src="Chris.jpg" alt="Chris Dalton" />
+      <!-- Company badges sit inside headshot div, above the gradient -->
+      <div class="companies">
+        <div class="company-badge">Clari</div>
+        <span class="arrow">→</span>
+        <div class="company-badge">Gainsight</div>
+      </div>
+    </div>
+
+    <!-- Name plate -->
+    <div class="nameplate">
+      <span class="name">Chris Dalton</span>
+      <span class="role">Principal, Customer Marketing @ Gainsight</span>
+    </div>
+
+    <!-- Chyron -->
+    <div class="chyron">
+      <span class="chyron-word">GAINED</span>
+    </div>
+
+  </div>
+</body>
+</html>
