@@ -129,7 +129,7 @@
     justify-content: center;
   }
   .flow-step {
-    text-align: center; padding: 20px 24px; background: var(--bg-warm);
+    text-align: center; padding: 20px 24px; background: #fff;
     border-radius: 10px; border: 1px solid var(--border); min-width: 160px;
   }
   .flow-step .step-label { font-size: 13px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
@@ -174,7 +174,7 @@
   /* ── Quote ── */
   .quote-block {
     padding: 32px 36px; border-left: 4px solid var(--accent);
-    background: var(--bg-warm); border-radius: 0 10px 10px 0;
+    background: #fff; border-radius: 0 10px 10px 0;
     margin-top: 32px;
   }
   .quote-block p { font-size: 22px; font-weight: 500; font-style: italic; line-height: 1.5; }
@@ -227,7 +227,7 @@
   /* Close slide */
   .close-advice {
     display: flex; gap: 16px; align-items: flex-start; margin-top: 24px;
-    padding: 24px; background: var(--bg-warm); border-radius: 10px;
+    padding: 24px; background: #fff; border-radius: 10px; border: 1px solid var(--border);
   }
   .close-advice .step-num {
     width: 36px; height: 36px; border-radius: 50%; background: var(--accent);
@@ -236,6 +236,54 @@
   }
   .close-advice h3 { font-size: 18px; font-weight: 600; margin-bottom: 3px; }
   .close-advice p { font-size: 15px; color: var(--text-muted); line-height: 1.5; }
+
+  /* ── Report replica table ── */
+  .report-replica {
+    flex: 1; display: flex; flex-direction: column;
+    border: 1px solid var(--border); border-radius: 10px;
+    background: #fff; overflow: hidden; margin-top: 20px;
+    max-height: 480px;
+  }
+  .report-replica-header {
+    padding: 16px 24px; border-bottom: 1px solid var(--border);
+  }
+  .report-replica-header h3 { font-size: 15px; font-weight: 700; line-height: 1.3; }
+  .report-replica-header p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .report-replica-section {
+    padding: 12px 24px 4px; font-size: 14px; font-weight: 700; color: var(--text-primary);
+  }
+  .report-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .report-table th {
+    text-align: left; padding: 8px 16px; font-size: 11px; font-weight: 600;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px;
+    border-bottom: 1px solid var(--border); background: var(--bg-warm);
+  }
+  .report-table td {
+    padding: 7px 16px; border-bottom: 1px solid #f0f0f0;
+    font-size: 13px; color: var(--text-primary);
+  }
+  .report-table td:nth-child(2) { font-weight: 700; text-align: center; }
+  .report-table td:nth-child(3) { text-align: center; }
+  .report-table td:last-child { font-size: 12px; color: var(--text-muted); }
+  .delta-up { color: #16a34a; font-weight: 600; }
+  .delta-down { color: var(--accent); font-weight: 600; }
+  .delta-flat { color: var(--text-muted); }
+
+  /* ── Benchmark table ── */
+  .bench-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
+  .bench-table th {
+    text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px;
+    border-bottom: 2px solid var(--border); background: var(--bg-warm);
+  }
+  .bench-table td {
+    padding: 10px 14px; border-bottom: 1px solid #f0f0f0;
+    font-size: 13px; color: var(--text-primary); vertical-align: top;
+  }
+  .bench-table td:first-child { font-weight: 600; }
+  .bench-table td:nth-child(3) { font-weight: 700; text-align: center; }
+  .bench-table td:last-child { font-size: 12px; color: var(--text-muted); }
+  .bench-table tr:last-child td { border-bottom: none; }
 </style>
 </head>
 <body>
@@ -309,10 +357,11 @@
       <div class="col">
         <h3 class="mb-16">What leadership needed</h3>
         <ul>
-          <li>Weekly advocacy program performance</li>
-          <li>Trends vs. prior week</li>
-          <li>What's working, what's not</li>
-          <li>Industry benchmarks against peers</li>
+          <li>Weekly program metrics and regional trends</li>
+          <li>Performance vs. prior week</li>
+          <li>Program audit: what's working, what's not</li>
+          <li>Benchmarks against Adobe, Marketo, and peers</li>
+          <li>Next-step actions mapped to company goals</li>
         </ul>
       </div>
       <div class="col">
@@ -406,9 +455,9 @@
        ══════════════════════════════════════════════ -->
   <div class="slide bg-warm" data-slide="6">
     <p class="section-label">The Build</p>
-    <h2>The Advocacy Copilot</h2>
-    <p class="mt-16 muted" style="max-width:600px;font-size:18px;">
-      An always-on custom GPT in ChatGPT Pro that ingests data from across Canva's tool stack and produces a leadership-ready report every Thursday.
+    <h2>The Canva Advocacy Copilot</h2>
+    <p class="mt-16 muted" style="max-width:640px;font-size:18px;">
+      An always-on strategy wingmate for the Canva Visionaries &amp; Enterprise Advocacy programs. It analyzes program health, spots adoption gaps, and surfaces insights tied to pipeline, retention, and advocacy growth.
     </p>
     <div class="two-col mt-32">
       <div class="col">
@@ -423,12 +472,12 @@
         </ul>
       </div>
       <div class="col">
-        <h3 class="mb-16">How it works</h3>
+        <h3 class="mb-16">What it does</h3>
         <ul>
-          <li>Custom GPT in ChatGPT Pro</li>
-          <li>Crystal uploads fresh data weekly</li>
-          <li>It reads everything, scans industry best practices, webinars, competitor programs</li>
-          <li>Outputs a leadership-ready report</li>
+          <li>Generates weekly advocacy reports with metrics, regional trends, and next-step actions</li>
+          <li>Audits the Visionaries program for enterprise adoption gaps</li>
+          <li>Benchmarks performance against top peer advocacy programs</li>
+          <li>Surfaces industry trends and their implications for Canva</li>
         </ul>
         <p class="mt-16 small muted" style="font-style:italic;">"There has to be an easier way for this to just get itself out." — Crystal</p>
       </div>
@@ -495,13 +544,63 @@
   </div>
 
   <!-- ══════════════════════════════════════════════
-       SLIDE 8 — Output Example (Screenshot Placeholder)
+       SLIDE 8 — Momentum Overview (Report Replica)
        ══════════════════════════════════════════════ -->
   <div class="slide bg-warm" data-slide="8">
-    <p class="section-label">Example</p>
-    <h2>A real Thursday report</h2>
-    <div class="screenshot-placeholder">
-      <span>[ Screenshot of weekly leadership report ]</span>
+    <p class="section-label">Example Output</p>
+    <h2 style="font-size:28px;">Canva Visionaries — Weekly Advocacy Report</h2>
+    <p class="muted small mt-8">Delivery: Thursdays &nbsp;·&nbsp; Audience: Leadership, B2B GTM, Sales &nbsp;·&nbsp; Strategic &amp; Enterprise 2K+</p>
+    <div class="report-replica">
+      <div class="report-replica-section">Momentum Overview (Summary Card)</div>
+      <table class="report-table">
+        <thead>
+          <tr><th>Metric</th><th>Current</th><th style="text-align:center;">vs. Prior Week</th><th>Source</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Advocates Accepted</td><td>36</td><td class="delta-up">+2</td><td>Invite Master Tracker</td></tr>
+          <tr><td>Activation Rate</td><td>36%</td><td class="delta-flat">—</td><td>Program activity log</td></tr>
+          <tr><td>Acceptance Rate</td><td>43%</td><td class="delta-up">+5 pts</td><td>Invite Master Tracker</td></tr>
+          <tr><td>Decline Rate</td><td>0.4%</td><td class="delta-up">-5.6 pts</td><td>Invite Master Tracker</td></tr>
+          <tr><td>No Response Rate</td><td>46%</td><td class="delta-down">+22 pts</td><td>Invite Master Tracker</td></tr>
+          <tr><td>Regional Mix</td><td style="font-size:12px;">AMER 79% / EMEA 16% / APJ 5%</td><td class="delta-flat">—</td><td>Invite Master Tracker</td></tr>
+          <tr><td>Seniority Mix</td><td style="font-size:12px;">VP+ 19% / Dir 43% / Mgr 38%</td><td class="delta-flat">—</td><td>Invite Master Tracker</td></tr>
+          <tr><td>Pipeline Velocity</td><td>7.8 days</td><td class="delta-up">-1.2 days</td><td>Tracker timestamps</td></tr>
+          <tr><td>Influenced Closed/Won ARR</td><td>$5.94M</td><td class="delta-flat">—</td><td>Champion HQ / SFDC</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small muted mt-8">All identifying data redacted. Metrics shown are illustrative of actual report format.</p>
+    <div class="slide-footer">
+      <svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 22,22 2,22" fill="#ccc"/></svg>
+      peerbound
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SLIDE 9 — Benchmarks (Report Replica Page 2)
+       ══════════════════════════════════════════════ -->
+  <div class="slide bg-white" data-slide="9">
+    <p class="section-label">Example Output</p>
+    <h2 style="font-size:28px;">Program Influence Benchmarks vs. Top SaaS</h2>
+    <p class="muted small mt-8">Comparative ranges compiled from public industry research and vendor reports. Used for directional benchmarking only.</p>
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:16px;">
+      <table class="bench-table">
+        <thead>
+          <tr><th>Dimension</th><th>Peer Benchmark Range</th><th>Canva Visionaries</th><th>Readout</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Acceptance Rate</td><td>25–45% for targeted exec outreach</td><td>43%</td><td>At upper bound; maintain with sharper value props</td></tr>
+          <tr><td>No-Response Rate</td><td>30–50% for cold/warm exec outreach</td><td>46%</td><td>In range; reduce via multi-channel follow-ups</td></tr>
+          <tr><td>Decline Rate</td><td>2–8% (policy/brand constraints)</td><td>0.4%</td><td>Best-in-class; preserve with T2 agreement path</td></tr>
+          <tr><td>Activation in first 30–60 days</td><td>25–40%</td><td>33–36%</td><td>Healthy; continue low-lift activations</td></tr>
+          <tr><td>Exec (VP+/C-suite) mix</td><td>15–30% in advocacy cohorts</td><td>19%</td><td>On-track; target 25%+ for Visionaries</td></tr>
+          <tr><td>Reference attach rate</td><td>35–60% where mature ref ops exist</td><td>Pilot</td><td>Implement SFDC stage-gate; target 50%+</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="quote-block" style="margin-top:20px;">
+      <p style="font-size:18px;">"It's almost like a report card. I want to see what they're doing in order to match them or bring it back to our team."</p>
+      <div class="attr">— Crystal Anderson</div>
     </div>
     <div class="slide-footer">
       <svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 22,22 2,22" fill="#ccc"/></svg>
@@ -510,9 +609,9 @@
   </div>
 
   <!-- ══════════════════════════════════════════════
-       SLIDE 9 — The Human Review Layer
+       SLIDE 10 — The Human Review Layer
        ══════════════════════════════════════════════ -->
-  <div class="slide bg-white" data-slide="9">
+  <div class="slide bg-warm" data-slide="10">
     <p class="section-label">The Safety Net</p>
     <h2>AI drafts it. Humans send it.</h2>
     <p class="mt-16 muted" style="max-width:620px;font-size:18px;">
@@ -546,9 +645,9 @@
   </div>
 
   <!-- ══════════════════════════════════════════════
-       SLIDE 10 — The Tool Stack
+       SLIDE 11 — The Tool Stack
        ══════════════════════════════════════════════ -->
-  <div class="slide bg-warm" data-slide="10">
+  <div class="slide bg-white" data-slide="11">
     <p class="section-label">The Stack</p>
     <h2>Built tools and bought tools coexist</h2>
     <p class="mt-16 muted" style="max-width:640px;font-size:18px;">
@@ -568,7 +667,7 @@
       <div class="tool-card">
         <div class="tool-role">Augment</div>
         <h3>Custom GPTs</h3>
-        <p>The advocacy copilot for weekly reports. Plus a Customer Proof Assistant built on Claude by her colleague Debbi.</p>
+        <p>The advocacy copilot for weekly reports. Plus a Customer Proof Assistant on Claude — sources approved proof and maps champions to campaigns.</p>
       </div>
     </div>
     <p class="mt-24 small muted" style="max-width:640px;">
@@ -582,9 +681,9 @@
   </div>
 
   <!-- ══════════════════════════════════════════════
-       SLIDE 11 — Practical Close
+       SLIDE 12 — Practical Close
        ══════════════════════════════════════════════ -->
-  <div class="slide bg-white" data-slide="11">
+  <div class="slide bg-warm" data-slide="12">
     <p class="section-label">Takeaway</p>
     <h2>Start small. Test one thing.<br>Optimize from there.</h2>
     <p class="mt-24 muted" style="max-width:620px;font-size:18px;">
@@ -621,9 +720,9 @@
   </div>
 
   <!-- ══════════════════════════════════════════════
-       SLIDE 12 — End Card
+       SLIDE 13 — End Card
        ══════════════════════════════════════════════ -->
-  <div class="slide bg-warm" data-slide="12" style="align-items:center;justify-content:center;text-align:center;">
+  <div class="slide bg-white" data-slide="13" style="align-items:center;justify-content:center;text-align:center;">
     <div class="logo mb-24" style="justify-content:center;">
       <svg viewBox="0 0 24 24" fill="none" style="width:28px;height:28px;"><polygon points="12,2 22,22 2,22" fill="#FF4044"/></svg>
       <span style="font-size:18px;">peerbound</span>
@@ -641,7 +740,7 @@
 <!-- Navigation -->
 <div class="nav">
   <button id="prev" aria-label="Previous slide">←</button>
-  <span class="counter" id="counter">1 / 12</span>
+  <span class="counter" id="counter">1 / 13</span>
   <button id="next" aria-label="Next slide">→</button>
 </div>
 
