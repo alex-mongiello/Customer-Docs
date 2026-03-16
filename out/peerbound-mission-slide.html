@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Peerbound — Mission, Values &amp; Proof</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
     --accent: #FF4044;
+    --accent-dark: #e0353a;
     --bg-white: #ffffff;
     --bg-warm: #f7f7f6;
     --text-primary: #1d1d1d;
@@ -27,145 +28,180 @@
     min-height: 100vh; overflow: hidden;
   }
 
+  /* ── Slide ── */
   .slide {
     position: relative;
     width: var(--slide-w); height: var(--slide-h);
-    background: var(--bg-white);
-    box-shadow: 0 20px 80px rgba(0,0,0,.35);
+    background: var(--text-primary);
+    box-shadow: 0 20px 80px rgba(0,0,0,.5);
+    display: flex; overflow: hidden;
+  }
+
+  /* ── Left panel: mission hero ── */
+  .left {
+    width: 480px; flex-shrink: 0;
+    background: var(--accent);
     display: flex; flex-direction: column;
-    padding: 56px 88px 48px;
+    padding: 52px 44px 44px;
+    position: relative;
   }
 
-  .slide::after {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-    height: 4px; background: var(--accent);
+  .left::after {
+    content: '';
+    position: absolute; top: 0; right: -60px;
+    width: 120px; height: 100%;
+    background: var(--accent);
+    clip-path: polygon(0 0, 0% 100%, 100% 50%);
   }
 
-  /* ── Logo ── */
   .logo {
     display: flex; align-items: center; gap: 8px;
-    font-size: 14px; font-weight: 600; color: var(--text-muted);
-    letter-spacing: 0.5px; text-transform: uppercase;
+    font-size: 13px; font-weight: 700; color: rgba(255,255,255,.7);
+    letter-spacing: 0.6px; text-transform: uppercase;
   }
-  .logo svg { width: 18px; height: 18px; }
+  .logo svg { width: 16px; height: 16px; }
 
-  /* ── Mission ── */
-  .mission {
-    margin-top: 28px;
-    padding: 28px 32px;
-    background: var(--bg-warm);
-    border-radius: 12px;
-    border-left: 4px solid var(--accent);
-  }
   .mission-label {
-    font-size: 11px; font-weight: 700; color: var(--accent);
-    text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 10px;
-  }
-  .mission p {
-    font-size: 22px; font-weight: 600; color: var(--text-primary);
-    line-height: 1.4; max-width: 680px;
+    margin-top: auto;
+    font-size: 11px; font-weight: 700; color: rgba(255,255,255,.5);
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px;
   }
 
-  /* ── Values ── */
-  .values-row {
-    display: flex; gap: 20px; margin-top: 28px;
+  .mission-text {
+    font-size: 26px; font-weight: 800; color: #fff;
+    line-height: 1.3; letter-spacing: -0.3px;
+    max-width: 380px;
   }
-  .value-card {
-    flex: 1; padding: 22px 20px; border: 1px solid var(--border);
-    border-radius: 10px; background: var(--bg-white);
+
+  .mission-underline {
+    width: 40px; height: 3px; background: rgba(255,255,255,.35);
+    border-radius: 2px; margin-top: 24px; margin-bottom: auto;
   }
-  .value-num {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; border-radius: 50%;
-    background: var(--accent); color: #fff;
-    font-size: 13px; font-weight: 700; margin-bottom: 10px;
+
+  /* ── Right panel: values + testimonial ── */
+  .right {
+    flex: 1; display: flex; flex-direction: column;
+    padding: 52px 56px 44px 100px;
+    background: var(--text-primary);
+    position: relative;
   }
-  .value-card h3 {
-    font-size: 16px; font-weight: 700; color: var(--text-primary);
-    margin-bottom: 6px;
+
+  .values-label {
+    font-size: 11px; font-weight: 700; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 28px;
   }
-  .value-card p {
-    font-size: 14px; color: var(--text-muted); line-height: 1.5;
+
+  .value-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    margin-bottom: 24px;
+  }
+  .value-item:last-child { margin-bottom: 0; }
+
+  .value-marker {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 2px solid rgba(255,255,255,.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: var(--accent);
+    flex-shrink: 0; margin-top: 1px;
+  }
+
+  .value-item h3 {
+    font-size: 16px; font-weight: 700; color: #fff;
+    margin-bottom: 3px; letter-spacing: -0.2px;
+  }
+  .value-item p {
+    font-size: 13.5px; color: rgba(255,255,255,.45); line-height: 1.45;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    width: 100%; height: 1px;
+    background: rgba(255,255,255,.08);
+    margin: 28px 0;
   }
 
   /* ── Testimonial ── */
   .testimonial {
     margin-top: auto;
-    padding: 24px 28px;
-    background: var(--bg-warm);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    display: flex; gap: 24px; align-items: flex-start;
-  }
-  .testimonial-quote {
-    font-size: 36px; font-weight: 800; color: var(--accent);
-    line-height: 1; flex-shrink: 0; margin-top: -4px;
-  }
-  .testimonial p {
-    font-size: 15px; color: var(--text-primary); line-height: 1.55;
-    font-style: italic;
-  }
-  .testimonial .attr {
-    font-size: 13px; color: var(--text-muted); font-style: normal;
-    font-weight: 600; margin-top: 8px;
+    position: relative;
+    padding-left: 20px;
+    border-left: 2px solid var(--accent);
   }
 
-  /* ── Footer ── */
-  .slide-footer {
-    position: absolute; bottom: 20px; right: 88px;
-    display: flex; align-items: center; gap: 7px;
-    font-size: 12px; font-weight: 600; color: #bbb;
-    letter-spacing: 0.4px; text-transform: uppercase;
+  .testimonial p {
+    font-size: 14px; color: rgba(255,255,255,.6); line-height: 1.6;
+    font-style: italic;
   }
-  .slide-footer svg { width: 14px; height: 14px; }
+
+  .testimonial .attr {
+    margin-top: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .testimonial .attr-name {
+    font-size: 13px; font-weight: 700; color: #fff;
+    font-style: normal;
+  }
+  .testimonial .attr-co {
+    font-size: 12px; color: rgba(255,255,255,.35);
+    font-style: normal; font-weight: 500;
+  }
 </style>
 </head>
 <body>
 
 <div class="slide">
 
-  <div class="logo">
-    <svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 22,22 2,22" fill="#FF4044"/></svg>
-    peerbound
-  </div>
+  <!-- Left: Mission -->
+  <div class="left">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 22,22 2,22" fill="#fff"/></svg>
+      peerbound
+    </div>
 
-  <!-- Mission -->
-  <div class="mission">
     <div class="mission-label">Our Mission</div>
-    <p>Help companies win their markets by unlocking and amplifying the voices of their happy customers.</p>
+    <div class="mission-text">
+      Help companies win their markets by unlocking and amplifying the voices of their happy customers.
+    </div>
+    <div class="mission-underline"></div>
   </div>
 
-  <!-- Core Values -->
-  <div class="values-row">
-    <div class="value-card">
-      <div class="value-num">1</div>
-      <h3>Dazzle Customers</h3>
-      <p>Obsess over creating 'wow' moments for the people we serve.</p>
-    </div>
-    <div class="value-card">
-      <div class="value-num">2</div>
-      <h3>Deliver Results</h3>
-      <p>Set big goals, stay focused, and make it happen.</p>
-    </div>
-    <div class="value-card">
-      <div class="value-num">3</div>
-      <h3>Demand Excellence</h3>
-      <p>Pursue greatness without guilt and bring out the best in everyone.</p>
-    </div>
-  </div>
+  <!-- Right: Values + Proof -->
+  <div class="right">
+    <div class="values-label">Core Values</div>
 
-  <!-- Testimonial -->
-  <div class="testimonial">
-    <div class="testimonial-quote">"</div>
-    <div>
-      <p>Peerbound, thank you for being the most engaged, supportive vendors I've ever had the pleasure of partnering with. Can only hope we continue to scale our relationship as demand for customer proof grows!</p>
-      <div class="attr">Debbi Shibuya &nbsp;·&nbsp; Canva</div>
+    <div class="value-item">
+      <div class="value-marker">1</div>
+      <div>
+        <h3>Dazzle Customers</h3>
+        <p>Obsess over creating 'wow' moments for the people we serve.</p>
+      </div>
     </div>
-  </div>
 
-  <div class="slide-footer">
-    <svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 22,22 2,22" fill="#ccc"/></svg>
-    peerbound
+    <div class="value-item">
+      <div class="value-marker">2</div>
+      <div>
+        <h3>Deliver Results</h3>
+        <p>Set big goals, stay focused, and make it happen.</p>
+      </div>
+    </div>
+
+    <div class="value-item">
+      <div class="value-marker">3</div>
+      <div>
+        <h3>Demand Excellence</h3>
+        <p>Pursue greatness without guilt and bring out the best in everyone.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="testimonial">
+      <p>"Peerbound, thank you for being the most engaged, supportive vendors I've ever had the pleasure of partnering with. Can only hope we continue to scale our relationship as demand for customer proof grows!"</p>
+      <div class="attr">
+        <span class="attr-name">Debbi Shibuya</span>
+        <span class="attr-co">Canva</span>
+      </div>
+    </div>
   </div>
 
 </div>
