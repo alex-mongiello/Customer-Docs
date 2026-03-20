@@ -3,6 +3,7 @@ import {Composition} from 'remotion';
 import {NotificationFlood} from './examples/code/NotificationFlood';
 import {PeerboundWaitingRoom} from './PeerboundWaitingRoom';
 import {ChrisDaltonCard} from './PersonnelCard';
+import {CrystalAnderson} from './HowIAI/CrystalAnderson';
 
 export const Root: React.FC = () => {
   return (
@@ -27,6 +28,14 @@ export const Root: React.FC = () => {
         id="ChrisDaltonCard"
         component={ChrisDaltonCard}
         durationInFrames={1}
+        fps={30}
+        width={1080}
+        height={1080}
+      />
+      <Composition
+        id="CrystalAndersonHowIAI"
+        component={CrystalAnderson}
+        durationInFrames={450}
         fps={30}
         width={1080}
         height={1080}
