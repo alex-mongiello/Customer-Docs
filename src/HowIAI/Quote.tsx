@@ -2,8 +2,7 @@ import React from 'react';
 import {useCurrentFrame, interpolate} from 'remotion';
 import {HandwrittenText} from './HandwrittenText';
 import {HighlighterSwipe} from './HighlighterSwipe';
-
-const INDIE_FLOWER = "'Indie Flower', cursive";
+import {FONT_HANDWRITING} from './fonts';
 
 const QUOTE_TEXT =
   'Start small and test out a theory or prompt and then start optimizing';
@@ -50,7 +49,7 @@ export const Quote: React.FC = () => {
           startFrame={280}
           endFrame={350}
           style={{
-            fontFamily: INDIE_FLOWER,
+            fontFamily: FONT_HANDWRITING,
             fontSize: 28,
             color: '#1C1917',
             lineHeight: 1.6,

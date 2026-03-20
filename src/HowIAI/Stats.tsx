@@ -2,14 +2,12 @@ import React from 'react';
 import {useCurrentFrame} from 'remotion';
 import {HandwrittenText} from './HandwrittenText';
 import {HighlighterSwipe} from './HighlighterSwipe';
-
-const PATRICK_HAND = "'Patrick Hand SC', cursive";
-const INDIE_FLOWER = "'Indie Flower', cursive";
+import {FONT_DISPLAY, FONT_HANDWRITING} from './fonts';
 
 const statLines = [
-  {text: 'Team of 3.', start: 50, end: 75, font: PATRICK_HAND, size: 30, bold: true},
-  {text: '5,000 employees.', start: 70, end: 95, font: INDIE_FLOWER, size: 28, bold: false},
-  {text: '1,000s of customers.', start: 90, end: 120, font: INDIE_FLOWER, size: 28, bold: false},
+  {text: 'Team of 3.', start: 50, end: 75, font: FONT_DISPLAY, size: 30, bold: true},
+  {text: '5,000 employees.', start: 70, end: 95, font: FONT_HANDWRITING, size: 28, bold: false},
+  {text: '1,000s of customers.', start: 90, end: 120, font: FONT_HANDWRITING, size: 28, bold: false},
 ];
 
 interface StatsProps {

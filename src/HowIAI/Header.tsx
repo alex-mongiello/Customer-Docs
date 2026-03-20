@@ -1,8 +1,7 @@
 import React from 'react';
 import {useCurrentFrame, interpolate} from 'remotion';
 import {SVGDrawOn} from './SVGDrawOn';
-
-const PATRICK_HAND = "'Patrick Hand SC', cursive";
+import {FONT_DISPLAY} from './fonts';
 
 // SVG paths for spark/emphasis lines near "AI"
 const SparkLines: React.FC<{startFrame: number}> = ({startFrame}) => {
@@ -77,7 +76,7 @@ export const Header: React.FC = () => {
       <div style={{position: 'relative', display: 'inline-block'}}>
         <span
           style={{
-            fontFamily: PATRICK_HAND,
+            fontFamily: FONT_DISPLAY,
             fontSize: 58,
             color: '#1C1917',
             letterSpacing: 3,

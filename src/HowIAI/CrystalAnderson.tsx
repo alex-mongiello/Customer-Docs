@@ -1,8 +1,5 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame, interpolate} from 'remotion';
-import {loadFont as loadPatrickHand} from '@remotion/google-fonts/PatrickHandSC';
-import {loadFont as loadIndieFlower} from '@remotion/google-fonts/IndieFlower';
-import {loadFont as loadInter} from '@remotion/google-fonts/Inter';
 import {NotebookBackground} from './NotebookBackground';
 import {Header} from './Header';
 import {DoodleHeart} from './DoodleHeart';
@@ -14,10 +11,13 @@ import {Quote} from './Quote';
 import {CTAPage} from './CTAPage';
 import {PageFlip} from './PageFlip';
 
-// Load Google Fonts
-loadPatrickHand();
-loadIndieFlower();
-loadInter();
+// Google Fonts — To enable, uncomment below (requires network access for render):
+// import {loadFont as loadPatrickHand} from '@remotion/google-fonts/PatrickHandSC';
+// import {loadFont as loadIndieFlower} from '@remotion/google-fonts/IndieFlower';
+// import {loadFont as loadInter} from '@remotion/google-fonts/Inter';
+// loadPatrickHand('normal', {subsets: ['latin'], weights: ['400']});
+// loadIndieFlower('normal', {subsets: ['latin'], weights: ['400']});
+// loadInter('normal', {subsets: ['latin'], weights: ['500', '600', '700']});
 
 /**
  * Crystal Anderson "How I AI" Spotlight

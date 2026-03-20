@@ -1,8 +1,7 @@
 import React from 'react';
 import {useCurrentFrame, interpolate} from 'remotion';
 import {HandwrittenText} from './HandwrittenText';
-
-const INDIE_FLOWER = "'Indie Flower', cursive";
+import {FONT_HANDWRITING} from './fonts';
 
 interface HookProps {
   opacity?: number;
@@ -25,7 +24,7 @@ export const Hook: React.FC<HookProps> = ({opacity = 1}) => {
           startFrame={120}
           endFrame={175}
           style={{
-            fontFamily: INDIE_FLOWER,
+            fontFamily: FONT_HANDWRITING,
             fontSize: 24,
             color: '#57534E',
           }}

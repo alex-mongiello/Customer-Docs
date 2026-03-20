@@ -1,9 +1,6 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-
-const PATRICK_HAND = "'Patrick Hand SC', cursive";
-const INDIE_FLOWER = "'Indie Flower', cursive";
-const INTER = "'Inter', sans-serif";
+import {FONT_DISPLAY, FONT_HANDWRITING, FONT_LABEL} from './fonts';
 
 export const CTAPage: React.FC = () => {
   return (
@@ -20,7 +17,7 @@ export const CTAPage: React.FC = () => {
       {/* Intro line */}
       <p
         style={{
-          fontFamily: INDIE_FLOWER,
+          fontFamily: FONT_HANDWRITING,
           fontSize: 28,
           color: '#57534E',
           marginBottom: 20,
@@ -35,7 +32,7 @@ export const CTAPage: React.FC = () => {
       <div style={{position: 'relative', marginBottom: 24}}>
         <h1
           style={{
-            fontFamily: PATRICK_HAND,
+            fontFamily: FONT_DISPLAY,
             fontSize: 64,
             color: '#1C1917',
             letterSpacing: 2,
@@ -64,7 +61,7 @@ export const CTAPage: React.FC = () => {
       {/* Time */}
       <p
         style={{
-          fontFamily: INDIE_FLOWER,
+          fontFamily: FONT_HANDWRITING,
           fontSize: 24,
           color: '#1C1917',
           marginBottom: 28,
@@ -78,7 +75,7 @@ export const CTAPage: React.FC = () => {
         style={{
           backgroundColor: '#FF4044',
           color: '#FFFFFF',
-          fontFamily: INTER,
+          fontFamily: FONT_LABEL,
           fontSize: 20,
           fontWeight: 700,
           paddingLeft: 36,
@@ -97,7 +94,7 @@ export const CTAPage: React.FC = () => {
       {/* Details */}
       <p
         style={{
-          fontFamily: INTER,
+          fontFamily: FONT_LABEL,
           fontSize: 14,
           fontWeight: 500,
           color: '#78716C',
@@ -111,7 +108,7 @@ export const CTAPage: React.FC = () => {
       {/* Peerbound watermark */}
       <p
         style={{
-          fontFamily: INTER,
+          fontFamily: FONT_LABEL,
           fontSize: 11,
           fontWeight: 700,
           color: '#D8D6D3',

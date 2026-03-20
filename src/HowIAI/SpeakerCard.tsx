@@ -1,9 +1,7 @@
 import React from 'react';
 import {useCurrentFrame, interpolate, spring} from 'remotion';
 import {HandwrittenText} from './HandwrittenText';
-
-const PATRICK_HAND = "'Patrick Hand SC', cursive";
-const INDIE_FLOWER = "'Indie Flower', cursive";
+import {FONT_DISPLAY, FONT_HANDWRITING, FONT_LABEL} from './fonts';
 const SPRING_SNAPPY = {fps: 30, damping: 14, mass: 0.6, stiffness: 130};
 
 export const SpeakerCard: React.FC<{translateY?: number}> = ({
@@ -65,7 +63,7 @@ export const SpeakerCard: React.FC<{translateY?: number}> = ({
         >
           <span
             style={{
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: FONT_LABEL,
               fontSize: 12,
               fontWeight: 600,
               color: '#78716C',
@@ -103,7 +101,7 @@ export const SpeakerCard: React.FC<{translateY?: number}> = ({
           startFrame={215}
           endFrame={235}
           style={{
-            fontFamily: PATRICK_HAND,
+            fontFamily: FONT_DISPLAY,
             fontSize: 26,
             color: '#1C1917',
             display: 'block',
@@ -114,7 +112,7 @@ export const SpeakerCard: React.FC<{translateY?: number}> = ({
           startFrame={230}
           endFrame={255}
           style={{
-            fontFamily: INDIE_FLOWER,
+            fontFamily: FONT_HANDWRITING,
             fontSize: 18,
             color: '#57534E',
             display: 'block',
@@ -126,7 +124,7 @@ export const SpeakerCard: React.FC<{translateY?: number}> = ({
           startFrame={250}
           endFrame={262}
           style={{
-            fontFamily: INDIE_FLOWER,
+            fontFamily: FONT_HANDWRITING,
             fontSize: 22,
             fontWeight: 700,
             color: '#7C3AED',
